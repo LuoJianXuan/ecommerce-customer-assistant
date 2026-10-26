@@ -1,0 +1,82 @@
+# Private configuration (keep only safe templates)
+.env
+.env.*
+*.env
+!.env.example
+!*.env.example
+
+# Python environment and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Models and caches
+.hf_cache/
+.cache/
+training/model_out/
+*.safetensors
+*.pt
+*.pth
+*.onnx
+
+# Conversations, runtime databases and logs
+*.db
+*.sqlite*
+*.log
+/log/
+/logs/
+/tmp/
+/runtime/
+/exports/
+/private/
+/local-data/
+
+# Private exports, backups and archives; SQL source files stay visible
+/dumps/
+/database-dumps/
+/backups/
+/.portable-backups/
+/mysql-*.sql
+/dump*.sql
+/*-dump.sql
+*.dump
+*.sql.gz
+*.bak
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+
+# Raw collection/review records and unreviewed development material
+/training/data/real_questions.jsonl
+/training/data/review_sample.md
+/dev-notes/
+/gui-test-screenshots/
+/evals/ch10/screenshots/
+/kb_search_tmp.txt
+.zcode/
+.codex/
+.agents/
+.aws/
+
+# Private keys and certificates (public examples must be explicitly reviewed)
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Machine-specific editor and OS state
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

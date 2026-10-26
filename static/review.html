@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>知识缺口审核台 · 云优选</title>
+<style>
+  :root { --ink:#2b2320; --bg:#f2dcab; --panel:#fbf1dc; --card:#fffdf6; --orange:#f08b3e; --coral:#f4694b; --green:#3fae5a; --muted:#8a7a5f; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif; color:var(--ink); background-color:var(--bg); background-image:linear-gradient(rgba(43,35,32,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(43,35,32,.055) 1px,transparent 1px); background-size:28px 28px; padding:24px 12px; }
+  .wrap { max-width:1100px; margin:auto; display:grid; gap:16px; }
+  .panel { background:var(--panel); border:3px solid var(--ink); box-shadow:8px 8px 0 var(--ink); }
+  header { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 18px; background:var(--orange); border-bottom:3px solid var(--ink); }
+  h1 { font-size:18px; } .sub,.muted { color:var(--muted); font-size:11.5px; }
+  header .sub { color:var(--ink); margin-top:2px; }
+  .nav,.actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .btn { font:inherit; font-size:12.5px; font-weight:700; padding:7px 12px; background:var(--card); color:var(--ink); border:2.5px solid var(--ink); box-shadow:3px 3px 0 var(--ink); cursor:pointer; text-decoration:none; }
+  .btn:active:not(:disabled) { transform:translate(3px,3px); box-shadow:none; }
+  .btn:disabled { opacity:.5; cursor:not-allowed; } .btn.ok { background:#d8f0de; } .btn.bad { background:#f8cfc5; } .btn.primary { background:var(--coral); color:white; }
+  .section { padding:16px 18px; border-bottom:3px solid var(--ink); } .section:last-child { border:0; }
+  .sec-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; } h2 { font-size:15px; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; } th,td { padding:8px; text-align:left; vertical-align:top; border-bottom:1.5px solid rgba(43,35,32,.24); } th { color:var(--muted); font-size:11px; }
+  .question { font-weight:700; cursor:pointer; } .question:hover { color:var(--coral); }
+  textarea { width:100%; min-height:70px; resize:vertical; font:inherit; font-size:12.5px; line-height:1.55; padding:8px; background:var(--card); border:2px solid var(--ink); }
+  .detail { display:none; margin-top:10px; padding:12px; background:#f7e7c7; border:2px solid var(--ink); } .detail.open { display:block; }
+  .raw { background:var(--card); border:2px solid var(--ink); padding:9px 11px; margin-top:8px; box-shadow:2px 2px 0 var(--ink); }
+  .raw-title { font-weight:700; font-size:12.5px; } .snapshot { margin:6px 0 0 16px; font-size:11.5px; line-height:1.55; }
+  .score { color:var(--coral); font-weight:700; }
+  .pill { display:inline-block; padding:2px 7px; border:1.5px solid var(--ink); border-radius:4px; font-size:10.5px; background:#fde3b8; }
+  .delta.up { color:var(--green); } .delta.down { color:var(--coral); font-weight:700; }
+  .empty { padding:28px; text-align:center; color:var(--muted); }
+  #notice { display:none; padding:7px 10px; margin-bottom:10px; border:2px solid var(--ink); font-size:12px; } #notice.ok { display:block; background:#d8f0de; } #notice.err { display:block; background:#f8cfc5; }
+  @media(max-width:760px) { header{align-items:flex-start;flex-direction:column} table{min-width:760px}.scroll{overflow:auto} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <header>
+      <div><h1>🧭 知识缺口审核台</h1><div class="sub">原话与证据可追溯 · 人工核准后才进入知识库</div></div>
+      <div class="nav"><a class="btn" href="/">💬 聊天</a><a class="btn" href="/kb">📚 知识库</a><a class="btn" href="/eval">📈 评估台账</a><a class="btn" href="/topic">🏷️ 主题分布</a></div>
+    </header>
+    <section class="section">
+      <div class="sec-head"><h2>① 待审知识缺口</h2><span class="pill" id="count">加载中</span></div>
+      <div id="notice"></div>
+      <div class="scroll">
+        <table><thead><tr><th>标准问题 / 详情</th><th>出现</th><th>核准答案</th><th>动作</th></tr></thead><tbody id="reviewRows"></tbody></table>
+      </div>
+    </section>
+    <section class="section">
+      <div class="sec-head">
+        <div><h2>② 自动化评估趋势</h2><div class="muted">最新一轮与上一轮环比；下降项红标</div></div>
+        <button class="btn primary" id="runEval">▶ 立即跑评估</button>
+      </div>
+      <div class="scroll">
+        <table><thead><tr><th>轮次</th><th>触发</th><th>题数</th><th>R@5</th><th>R@10</th><th>MRR</th><th>忠实度</th><th>库外拒答率</th></tr></thead><tbody id="evalRows"></tbody></table>
+      </div>
+    </section>
+  </div>
+</div>
+<script>
+const esc = s => String(s ?? "").replace(/[&<>\"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+async function api(url, options) { const r=await fetch(url,options); if(!r.ok) throw new Error((await r.text())||`HTTP ${r.status}`); return r.json(); }
+function notice(text, kind="ok") { const el=document.getElementById("notice"); el.className=kind; el.textContent=text; }
+function pct(value) { return value == null ? "-" : `${(value*100).toFixed(1)}%`; }
+function metricCell(value, delta) {
+  const d=Number(delta||0), cls=d<0?"down":d>0?"up":"", sign=d>0?"+":"";
+  return `${pct(value)}${d ? ` <span class="delta ${cls}">${sign}${(d*100).toFixed(1)}%</span>` : ""}`;
+}
+function trendMetrics(metrics) {
+  return metrics.retrieval ? {...metrics.retrieval,...metrics.generation} : metrics;
+}
+async function loadReviews() {
+  const {items}=await api("/api/review/items?status=待审");
+  document.getElementById("count").textContent=`${items.length} 条待审`;
+  const body=document.getElementById("reviewRows");
+  body.innerHTML=items.length?items.map(item=>`<tr data-id="${item.id}">
+    <td><div class="question" data-detail="${item.id}">▸ ${esc(item.std_question)}</div><div class="detail" id="detail-${item.id}">加载中…</div></td>
+    <td><span class="pill">${item.occurrence_count}</span></td>
+    <td><textarea id="answer-${item.id}">${esc(item.sample_answer)}</textarea></td>
+    <td><div class="actions"><button class="btn ok" data-approve="${item.id}">✓ 通过</button><button class="btn bad" data-reject="${item.id}">✕ 驳回</button></div></td>
+  </tr>`).join(""):`<tr><td colspan="4" class="empty">当前没有待审问题</td></tr>`;
+  document.querySelectorAll("[data-detail]").forEach(el=>el.onclick=()=>toggleDetail(+el.dataset.detail,el));
+  document.querySelectorAll("[data-approve]").forEach(el=>el.onclick=()=>approve(+el.dataset.approve,el));
+  document.querySelectorAll("[data-reject]").forEach(el=>el.onclick=()=>reject(+el.dataset.reject,el));
+}
+async function toggleDetail(id, title) {
+  const box=document.getElementById(`detail-${id}`); box.classList.toggle("open");
+  title.textContent=(box.classList.contains("open")?"▾ ":"▸ ")+title.textContent.slice(2);
+  if(!box.classList.contains("open")||box.dataset.loaded) return;
+  const item=await api(`/api/review/items/${id}`); box.dataset.loaded="1";
+  box.innerHTML=item.raw_questions.length?item.raw_questions.map(raw=>`<div class="raw"><div class="raw-title">${esc(raw.raw_question)}</div><div class="muted">${esc(raw.source)} · ${esc(raw.reason)} · ${esc(raw.created_at)}</div>${raw.retrieval_snapshot.length?`<ol class="snapshot">${raw.retrieval_snapshot.map(hit=>`<li><span class="score">${Number(hit.score||0).toFixed(3)}</span> · ${esc(hit.question||hit.section_path)}<br>${esc(hit.answer)}</li>`).join("")}</ol>`:`<div class="muted">本轮无召回证据</div>`}</div>`).join(""):`<div class="muted">没有归并原话（可能来自对话挖掘）</div>`;
+}
+function lockRow(btn,on=true) { btn.closest("tr").querySelectorAll("button,textarea").forEach(el=>el.disabled=on); }
+async function approve(id,btn) {
+  const answer=document.getElementById(`answer-${id}`).value.trim(); if(!answer){ notice("核准答案不能为空","err"); return; }
+  lockRow(btn); try { const data=await api(`/api/review/items/${id}/approve`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({approved_answer:answer})}); notice(`已发布为知识块 #${data.chunk_id}`); await loadReviews(); } catch(e){ lockRow(btn,false); notice(`通过失败：${e.message}`,"err"); }
+}
+async function reject(id,btn) { lockRow(btn); try { await api(`/api/review/items/${id}/reject`,{method:"POST"}); notice("已驳回并保留审计记录"); await loadReviews(); } catch(e){ lockRow(btn,false); notice(`驳回失败：${e.message}`,"err"); } }
+async function loadRuns() {
+  const {items}=await api("/api/eval/runs"); const body=document.getElementById("evalRows");
+  body.innerHTML=items.length?items.map(row=>{ const metrics=trendMetrics(row.metrics); return `<tr><td>#${row.id}<div class="muted">${esc(row.created_at)}</div></td><td>${row.trigger==="manual"?"手动":"定时"}</td><td>${row.case_count}</td><td>${metricCell(metrics.recall_at_5,row.delta.recall_at_5)}</td><td>${metricCell(metrics.recall_at_10,row.delta.recall_at_10)}</td><td>${metricCell(metrics.mrr,row.delta.mrr)}</td><td>${metricCell(metrics.faithfulness,row.delta.faithfulness)}</td><td>${metricCell(metrics.refusal_rate,row.delta.refusal_rate)}</td></tr>`; }).join(""):`<tr><td colspan="8" class="empty">还没有评估轮次</td></tr>`;
+}
+document.getElementById("runEval").onclick=async function(){ this.disabled=true; try { const job=await api("/api/eval/run",{method:"POST"}); notice(`评估任务 ${job.id} 已启动，完成后趋势会自动刷新`); pollJob(job.id,this); } catch(e){ this.disabled=false; notice(`启动失败：${e.message}`,"err"); } };
+async function pollJob(id,btn){ const timer=setInterval(async()=>{ try { const {items}=await api("/api/eval/jobs"); const job=items.find(x=>x.id===id); if(job&&job.status!=="running"){ clearInterval(timer); btn.disabled=false; await loadRuns(); notice(job.status==="done"?"评估完成，趋势已刷新":"评估失败，请到评估台账查看日志",job.status==="done"?"ok":"err"); } }catch(e){} },3000); }
+Promise.all([loadReviews(),loadRuns()]).catch(e=>notice(`加载失败：${e.message}`,"err"));
+</script>
+</body>
+</html>

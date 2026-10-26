@@ -1,0 +1,118 @@
+[
+  {
+    "id": "D04",
+    "query": "支持货到付款吗",
+    "old_bucket": "D_absent",
+    "new_bucket": "A_policy",
+    "old_gt": [],
+    "new_gt": [
+      {
+        "category": "会员说明",
+        "questions": "付款方式"
+      }
+    ],
+    "reason": "Current KB explicitly excludes cash on delivery."
+  },
+  {
+    "id": "D05",
+    "query": "净水器能过滤重金属吗",
+    "old_bucket": "D_absent",
+    "new_bucket": "C_colloquial",
+    "old_gt": [],
+    "new_gt": [
+      {
+        "category": "商品规格",
+        "questions": "QR-50A 厨下净水器"
+      }
+    ],
+    "reason": "Scoped answer only: QR-50A documentation does not promise heavy-metal removal; do not generalize to all purifiers."
+  },
+  {
+    "id": "D06",
+    "query": "可以用花呗分期吗",
+    "old_bucket": "D_absent",
+    "new_bucket": "A_policy",
+    "old_gt": [],
+    "new_gt": [
+      {
+        "category": "会员说明",
+        "questions": "付款方式"
+      }
+    ],
+    "reason": "Current KB explicitly excludes Huabei."
+  },
+  {
+    "id": "E02",
+    "query": "会员免邮券和满99包邮能叠加吗",
+    "old_bucket": "E_multi",
+    "new_bucket": "D_absent",
+    "old_gt": [
+      {
+        "category": "退货政策",
+        "questions": "运费说明"
+      },
+      {
+        "category": "会员说明",
+        "questions": "会员权益"
+      }
+    ],
+    "new_gt": [],
+    "reason": "The KB separately describes membership free-shipping coupons and the 99-yuan threshold, but never specifies whether they can be combined."
+  },
+  {
+    "id": "D30",
+    "query": "退款能退到别人的银行卡吗",
+    "old_bucket": "D_absent",
+    "new_bucket": "A_policy",
+    "old_gt": [],
+    "new_gt": [
+      {
+        "category": "退货政策",
+        "questions": "退款时效"
+      }
+    ],
+    "reason": "Refunds return to the original payment account; do not promise transfer to another person's card."
+  },
+  {
+    "id": "E13",
+    "query": "净水器整机质保和配件质保差多久",
+    "old_bucket": "E_multi",
+    "new_bucket": "E_multi",
+    "old_gt": [
+      {
+        "category": "商品规格",
+        "questions": "QR-50A 厨下净水器"
+      },
+      {
+        "category": "商品规格",
+        "questions": "电饭煲内胆配件"
+      }
+    ],
+    "new_gt": [
+      {
+        "category": "商品规格",
+        "questions": "QR-50A 厨下净水器"
+      }
+    ],
+    "reason": "Partial support only: purifier full-unit warranty is known; rice-cooker liner warranty is not evidence for purifier accessories."
+  },
+  {
+    "id": "E15",
+    "query": "电子发票和纸质发票有什么区别",
+    "old_bucket": "E_multi",
+    "new_bucket": "E_multi",
+    "old_gt": [
+      {
+        "category": "售后",
+        "questions": "怎么开发票"
+      }
+    ],
+    "new_gt": [
+      {
+        "category": "售后",
+        "questions": "怎么开发票"
+      }
+    ],
+    "reason": "Partial support only: electronic-invoice issuance is known; paper-vs-electronic differences are not documented."
+  }
+]

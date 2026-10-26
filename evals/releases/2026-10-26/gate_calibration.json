@@ -1,0 +1,824 @@
+{
+  "sample_count": 100,
+  "current": {
+    "threshold": 0.2,
+    "answerable_count": 73,
+    "answerable_passed": 55,
+    "answerable_pass_rate": 0.7534246575342466,
+    "absent_count": 27,
+    "absent_blocked": 27,
+    "correct_refusal": 1.0,
+    "false_allow_rate": 0.0,
+    "false_block_rate": 0.2465753424657534
+  },
+  "recommended": {
+    "threshold": 0.05,
+    "f1": 0.9252669039145908,
+    "answerable_recall": 0.8904109589041096,
+    "correct_refusal": 0.9629629629629629,
+    "accuracy": 0.91
+  },
+  "samples": [
+    {
+      "id": "A01",
+      "answerable": true,
+      "confidence": 0.7641,
+      "top1": 0.8141,
+      "valid_count": 6,
+      "gap": 0.0464
+    },
+    {
+      "id": "A02",
+      "answerable": true,
+      "confidence": 0.8766,
+      "top1": 0.8766,
+      "valid_count": 6,
+      "gap": 0.1549
+    },
+    {
+      "id": "A03",
+      "answerable": true,
+      "confidence": 0.9707,
+      "top1": 0.9707,
+      "valid_count": 6,
+      "gap": 0.4982
+    },
+    {
+      "id": "A04",
+      "answerable": true,
+      "confidence": 0.1919,
+      "top1": 0.1919,
+      "valid_count": 6,
+      "gap": 0.1706
+    },
+    {
+      "id": "A05",
+      "answerable": true,
+      "confidence": 0.9252,
+      "top1": 0.9252,
+      "valid_count": 6,
+      "gap": 0.6915
+    },
+    {
+      "id": "A06",
+      "answerable": true,
+      "confidence": 0.9767,
+      "top1": 0.9767,
+      "valid_count": 6,
+      "gap": 0.9465
+    },
+    {
+      "id": "A07",
+      "answerable": true,
+      "confidence": 0.8948,
+      "top1": 0.8948,
+      "valid_count": 6,
+      "gap": 0.7939
+    },
+    {
+      "id": "A08",
+      "answerable": true,
+      "confidence": 0.9433,
+      "top1": 0.9433,
+      "valid_count": 6,
+      "gap": 0.7644
+    },
+    {
+      "id": "A09",
+      "answerable": true,
+      "confidence": 0.9399,
+      "top1": 0.9399,
+      "valid_count": 6,
+      "gap": 0.8704
+    },
+    {
+      "id": "A10",
+      "answerable": true,
+      "confidence": 0.1097,
+      "top1": 0.1097,
+      "valid_count": 6,
+      "gap": 0.1055
+    },
+    {
+      "id": "B01",
+      "answerable": true,
+      "confidence": 0.9996,
+      "top1": 0.9996,
+      "valid_count": 6,
+      "gap": 0.1785
+    },
+    {
+      "id": "B02",
+      "answerable": true,
+      "confidence": 0.9982,
+      "top1": 0.9982,
+      "valid_count": 6,
+      "gap": 0.9858
+    },
+    {
+      "id": "B03",
+      "answerable": true,
+      "confidence": 0.9448,
+      "top1": 0.9948,
+      "valid_count": 6,
+      "gap": 0.0112
+    },
+    {
+      "id": "B04",
+      "answerable": true,
+      "confidence": 0.9976,
+      "top1": 0.9976,
+      "valid_count": 6,
+      "gap": 0.9974
+    },
+    {
+      "id": "B05",
+      "answerable": true,
+      "confidence": 0.9954,
+      "top1": 0.9954,
+      "valid_count": 6,
+      "gap": 0.9947
+    },
+    {
+      "id": "B06",
+      "answerable": true,
+      "confidence": 0.9961,
+      "top1": 0.9961,
+      "valid_count": 6,
+      "gap": 0.1153
+    },
+    {
+      "id": "B07",
+      "answerable": true,
+      "confidence": 0.9981,
+      "top1": 0.9981,
+      "valid_count": 6,
+      "gap": 0.9925
+    },
+    {
+      "id": "B08",
+      "answerable": true,
+      "confidence": 0.9952,
+      "top1": 0.9952,
+      "valid_count": 6,
+      "gap": 0.7657
+    },
+    {
+      "id": "C01",
+      "answerable": true,
+      "confidence": 0.0011,
+      "top1": 0.0511,
+      "valid_count": 6,
+      "gap": 0.0231
+    },
+    {
+      "id": "C02",
+      "answerable": true,
+      "confidence": 0.1767,
+      "top1": 0.1767,
+      "valid_count": 6,
+      "gap": 0.1557
+    },
+    {
+      "id": "C03",
+      "answerable": true,
+      "confidence": 0.1592,
+      "top1": 0.1592,
+      "valid_count": 6,
+      "gap": 0.08
+    },
+    {
+      "id": "C04",
+      "answerable": true,
+      "confidence": 0.0,
+      "top1": 0.0071,
+      "valid_count": 6,
+      "gap": 0.0051
+    },
+    {
+      "id": "C05",
+      "answerable": true,
+      "confidence": 0.4121,
+      "top1": 0.4121,
+      "valid_count": 6,
+      "gap": 0.4111
+    },
+    {
+      "id": "C06",
+      "answerable": true,
+      "confidence": 0.309,
+      "top1": 0.309,
+      "valid_count": 6,
+      "gap": 0.0877
+    },
+    {
+      "id": "C07",
+      "answerable": true,
+      "confidence": 0.1778,
+      "top1": 0.1778,
+      "valid_count": 6,
+      "gap": 0.1581
+    },
+    {
+      "id": "C08",
+      "answerable": true,
+      "confidence": 0.8948,
+      "top1": 0.8948,
+      "valid_count": 6,
+      "gap": 0.7516
+    },
+    {
+      "id": "D01",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0007,
+      "valid_count": 6,
+      "gap": 0.0001
+    },
+    {
+      "id": "D02",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0001,
+      "valid_count": 6,
+      "gap": 0.0
+    },
+    {
+      "id": "D03",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.011,
+      "valid_count": 6,
+      "gap": 0.011
+    },
+    {
+      "id": "D04",
+      "answerable": true,
+      "confidence": 0.4501,
+      "top1": 0.4501,
+      "valid_count": 6,
+      "gap": 0.3268
+    },
+    {
+      "id": "D05",
+      "answerable": true,
+      "confidence": 0.9099,
+      "top1": 0.9099,
+      "valid_count": 6,
+      "gap": 0.9087
+    },
+    {
+      "id": "D06",
+      "answerable": true,
+      "confidence": 0.1592,
+      "top1": 0.1592,
+      "valid_count": 6,
+      "gap": 0.1
+    },
+    {
+      "id": "E01",
+      "answerable": true,
+      "confidence": 0.7154,
+      "top1": 0.7154,
+      "valid_count": 6,
+      "gap": 0.2354
+    },
+    {
+      "id": "E02",
+      "answerable": false,
+      "confidence": 0.0147,
+      "top1": 0.0647,
+      "valid_count": 6,
+      "gap": 0.0262
+    },
+    {
+      "id": "E03",
+      "answerable": true,
+      "confidence": 0.0018,
+      "top1": 0.0518,
+      "valid_count": 6,
+      "gap": 0.0459
+    },
+    {
+      "id": "E04",
+      "answerable": true,
+      "confidence": 0.3895,
+      "top1": 0.3895,
+      "valid_count": 6,
+      "gap": 0.2601
+    },
+    {
+      "id": "E05",
+      "answerable": true,
+      "confidence": 0.9702,
+      "top1": 0.9702,
+      "valid_count": 6,
+      "gap": 0.8955
+    },
+    {
+      "id": "E06",
+      "answerable": true,
+      "confidence": 0.6654,
+      "top1": 0.6654,
+      "valid_count": 6,
+      "gap": 0.0718
+    },
+    {
+      "id": "A11",
+      "answerable": true,
+      "confidence": 0.3285,
+      "top1": 0.3285,
+      "valid_count": 6,
+      "gap": 0.3001
+    },
+    {
+      "id": "A12",
+      "answerable": true,
+      "confidence": 0.7607,
+      "top1": 0.7607,
+      "valid_count": 6,
+      "gap": 0.2353
+    },
+    {
+      "id": "A13",
+      "answerable": true,
+      "confidence": 0.9826,
+      "top1": 0.9826,
+      "valid_count": 6,
+      "gap": 0.9799
+    },
+    {
+      "id": "A14",
+      "answerable": true,
+      "confidence": 0.8397,
+      "top1": 0.8397,
+      "valid_count": 6,
+      "gap": 0.5357
+    },
+    {
+      "id": "A15",
+      "answerable": true,
+      "confidence": 0.2173,
+      "top1": 0.2173,
+      "valid_count": 6,
+      "gap": 0.1906
+    },
+    {
+      "id": "A16",
+      "answerable": true,
+      "confidence": 0.5448,
+      "top1": 0.5448,
+      "valid_count": 6,
+      "gap": 0.3166
+    },
+    {
+      "id": "A17",
+      "answerable": true,
+      "confidence": 0.4576,
+      "top1": 0.4576,
+      "valid_count": 6,
+      "gap": 0.4431
+    },
+    {
+      "id": "A18",
+      "answerable": true,
+      "confidence": 0.7578,
+      "top1": 0.7578,
+      "valid_count": 6,
+      "gap": 0.7522
+    },
+    {
+      "id": "A19",
+      "answerable": true,
+      "confidence": 0.5306,
+      "top1": 0.5306,
+      "valid_count": 6,
+      "gap": 0.2826
+    },
+    {
+      "id": "A20",
+      "answerable": true,
+      "confidence": 0.9325,
+      "top1": 0.9325,
+      "valid_count": 6,
+      "gap": 0.9179
+    },
+    {
+      "id": "B09",
+      "answerable": true,
+      "confidence": 0.989,
+      "top1": 0.989,
+      "valid_count": 6,
+      "gap": 0.9851
+    },
+    {
+      "id": "B10",
+      "answerable": true,
+      "confidence": 0.9909,
+      "top1": 0.9909,
+      "valid_count": 6,
+      "gap": 0.9901
+    },
+    {
+      "id": "B11",
+      "answerable": true,
+      "confidence": 0.9474,
+      "top1": 0.9974,
+      "valid_count": 6,
+      "gap": 0.0144
+    },
+    {
+      "id": "B12",
+      "answerable": true,
+      "confidence": 0.9949,
+      "top1": 0.9949,
+      "valid_count": 6,
+      "gap": 0.978
+    },
+    {
+      "id": "B13",
+      "answerable": true,
+      "confidence": 0.9984,
+      "top1": 0.9984,
+      "valid_count": 6,
+      "gap": 0.9852
+    },
+    {
+      "id": "B14",
+      "answerable": true,
+      "confidence": 0.9958,
+      "top1": 0.9958,
+      "valid_count": 6,
+      "gap": 0.32
+    },
+    {
+      "id": "B15",
+      "answerable": true,
+      "confidence": 0.99,
+      "top1": 0.99,
+      "valid_count": 6,
+      "gap": 0.6709
+    },
+    {
+      "id": "C09",
+      "answerable": true,
+      "confidence": 0.0647,
+      "top1": 0.0647,
+      "valid_count": 6,
+      "gap": 0.0514
+    },
+    {
+      "id": "C10",
+      "answerable": true,
+      "confidence": 0.9033,
+      "top1": 0.9033,
+      "valid_count": 6,
+      "gap": 0.6568
+    },
+    {
+      "id": "C11",
+      "answerable": true,
+      "confidence": 0.5906,
+      "top1": 0.6406,
+      "valid_count": 6,
+      "gap": 0.0339
+    },
+    {
+      "id": "C12",
+      "answerable": true,
+      "confidence": 0.1624,
+      "top1": 0.1624,
+      "valid_count": 6,
+      "gap": 0.1444
+    },
+    {
+      "id": "C13",
+      "answerable": true,
+      "confidence": 0.0,
+      "top1": 0.0489,
+      "valid_count": 6,
+      "gap": 0.0229
+    },
+    {
+      "id": "C14",
+      "answerable": true,
+      "confidence": 0.6868,
+      "top1": 0.6868,
+      "valid_count": 6,
+      "gap": 0.0579
+    },
+    {
+      "id": "C15",
+      "answerable": true,
+      "confidence": 0.851,
+      "top1": 0.851,
+      "valid_count": 6,
+      "gap": 0.6896
+    },
+    {
+      "id": "C16",
+      "answerable": true,
+      "confidence": 0.0839,
+      "top1": 0.0839,
+      "valid_count": 6,
+      "gap": 0.0707
+    },
+    {
+      "id": "C17",
+      "answerable": true,
+      "confidence": 0.7827,
+      "top1": 0.7827,
+      "valid_count": 6,
+      "gap": 0.7373
+    },
+    {
+      "id": "C18",
+      "answerable": true,
+      "confidence": 0.8355,
+      "top1": 0.8355,
+      "valid_count": 6,
+      "gap": 0.6128
+    },
+    {
+      "id": "C19",
+      "answerable": true,
+      "confidence": 0.0,
+      "top1": 0.015,
+      "valid_count": 6,
+      "gap": 0.0021
+    },
+    {
+      "id": "C20",
+      "answerable": true,
+      "confidence": 0.5392,
+      "top1": 0.5392,
+      "valid_count": 6,
+      "gap": 0.46
+    },
+    {
+      "id": "D07",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0001,
+      "valid_count": 6,
+      "gap": 0.0
+    },
+    {
+      "id": "D08",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0002,
+      "valid_count": 6,
+      "gap": 0.0001
+    },
+    {
+      "id": "D09",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0368,
+      "valid_count": 6,
+      "gap": 0.032
+    },
+    {
+      "id": "D10",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0011,
+      "valid_count": 6,
+      "gap": 0.0
+    },
+    {
+      "id": "D11",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0015,
+      "valid_count": 6,
+      "gap": 0.0002
+    },
+    {
+      "id": "D12",
+      "answerable": false,
+      "confidence": 0.011,
+      "top1": 0.061,
+      "valid_count": 6,
+      "gap": 0.0493
+    },
+    {
+      "id": "D13",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.001,
+      "valid_count": 6,
+      "gap": 0.0001
+    },
+    {
+      "id": "D14",
+      "answerable": false,
+      "confidence": 0.0075,
+      "top1": 0.0575,
+      "valid_count": 6,
+      "gap": 0.0121
+    },
+    {
+      "id": "D15",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0041,
+      "valid_count": 6,
+      "gap": 0.001
+    },
+    {
+      "id": "D16",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0007,
+      "valid_count": 6,
+      "gap": 0.0001
+    },
+    {
+      "id": "D17",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0051,
+      "valid_count": 6,
+      "gap": 0.0027
+    },
+    {
+      "id": "D18",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0037,
+      "valid_count": 6,
+      "gap": 0.0014
+    },
+    {
+      "id": "D19",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0029,
+      "valid_count": 6,
+      "gap": 0.0003
+    },
+    {
+      "id": "D20",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0041,
+      "valid_count": 6,
+      "gap": 0.0038
+    },
+    {
+      "id": "D21",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.044,
+      "valid_count": 6,
+      "gap": 0.0323
+    },
+    {
+      "id": "D22",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0061,
+      "valid_count": 6,
+      "gap": 0.0035
+    },
+    {
+      "id": "D23",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0097,
+      "valid_count": 6,
+      "gap": 0.0067
+    },
+    {
+      "id": "D24",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0007,
+      "valid_count": 6,
+      "gap": 0.0006
+    },
+    {
+      "id": "D25",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0009,
+      "valid_count": 6,
+      "gap": 0.0004
+    },
+    {
+      "id": "D26",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0008,
+      "valid_count": 6,
+      "gap": 0.0004
+    },
+    {
+      "id": "D27",
+      "answerable": false,
+      "confidence": 0.1303,
+      "top1": 0.1303,
+      "valid_count": 6,
+      "gap": 0.1158
+    },
+    {
+      "id": "D28",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0056,
+      "valid_count": 6,
+      "gap": 0.0036
+    },
+    {
+      "id": "D29",
+      "answerable": false,
+      "confidence": 0.0,
+      "top1": 0.0284,
+      "valid_count": 6,
+      "gap": 0.0273
+    },
+    {
+      "id": "D30",
+      "answerable": true,
+      "confidence": 0.0863,
+      "top1": 0.0863,
+      "valid_count": 6,
+      "gap": 0.0785
+    },
+    {
+      "id": "E07",
+      "answerable": true,
+      "confidence": 0.0119,
+      "top1": 0.0619,
+      "valid_count": 6,
+      "gap": 0.0077
+    },
+    {
+      "id": "E08",
+      "answerable": true,
+      "confidence": 0.011,
+      "top1": 0.061,
+      "valid_count": 6,
+      "gap": 0.0084
+    },
+    {
+      "id": "E09",
+      "answerable": true,
+      "confidence": 0.9433,
+      "top1": 0.9433,
+      "valid_count": 6,
+      "gap": 0.0865
+    },
+    {
+      "id": "E10",
+      "answerable": true,
+      "confidence": 0.9654,
+      "top1": 0.9654,
+      "valid_count": 6,
+      "gap": 0.9447
+    },
+    {
+      "id": "E11",
+      "answerable": true,
+      "confidence": 0.6783,
+      "top1": 0.6783,
+      "valid_count": 6,
+      "gap": 0.4649
+    },
+    {
+      "id": "E12",
+      "answerable": true,
+      "confidence": 0.9864,
+      "top1": 0.9864,
+      "valid_count": 6,
+      "gap": 0.9767
+    },
+    {
+      "id": "E13",
+      "answerable": true,
+      "confidence": 0.5412,
+      "top1": 0.5412,
+      "valid_count": 6,
+      "gap": 0.2574
+    },
+    {
+      "id": "E14",
+      "answerable": true,
+      "confidence": 0.9615,
+      "top1": 0.9615,
+      "valid_count": 6,
+      "gap": 0.9461
+    },
+    {
+      "id": "E15",
+      "answerable": true,
+      "confidence": 0.0,
+      "top1": 0.0272,
+      "valid_count": 6,
+      "gap": 0.0269
+    }
+  ],
+  "note": "Current formula; raw-query retrieval; in-sample calibration diagnostic; runtime threshold unchanged."
+}

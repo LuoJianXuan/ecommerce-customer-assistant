@@ -1,0 +1,100 @@
+{"id": "A01", "bucket": "A_policy", "query": "无理由退货支持几天", "gt": [{"category": "退货政策", "questions": "七天无理由退货"}]}
+{"id": "A02", "bucket": "A_policy", "query": "退货时效从哪天开始算", "gt": [{"category": "退货政策", "questions": "【关键条款】退货时效"}]}
+{"id": "A03", "bucket": "A_policy", "query": "退货寄回的运费谁承担", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "A04", "bucket": "A_policy", "query": "满多少钱包邮", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "A05", "bucket": "A_policy", "query": "退款多久能到账", "gt": [{"category": "退货政策", "questions": "退款时效"}]}
+{"id": "A06", "bucket": "A_policy", "query": "退货需要什么凭证", "gt": [{"category": "退货政策", "questions": "退货凭证"}]}
+{"id": "A07", "bucket": "A_policy", "query": "会员等级怎么划分", "gt": [{"category": "会员说明", "questions": "会员等级"}]}
+{"id": "A08", "bucket": "A_policy", "query": "黄金会员打几折", "gt": [{"category": "会员说明", "questions": "会员权益"}]}
+{"id": "A09", "bucket": "A_policy", "query": "换货流程怎么走", "gt": [{"category": "售后手册", "questions": "换货流程"}]}
+{"id": "A10", "bucket": "A_policy", "query": "投诉没人处理怎么办", "gt": [{"category": "售后手册", "questions": "投诉升级"}]}
+{"id": "B01", "bucket": "B_model", "query": "CFXB-40A 电饭煲容量多大", "gt": [{"category": "商品规格", "questions": "【关键条款】CFXB-40A 电饭煲"}]}
+{"id": "B02", "bucket": "B_model", "query": "AirDots 3 续航多长", "gt": [{"category": "商品规格", "questions": "AirDots 3 真无线耳机"}]}
+{"id": "B03", "bucket": "B_model", "query": "QR-50A 滤芯多久换一次", "gt": [{"category": "商品规格", "questions": "QR-50A 厨下净水器"}]}
+{"id": "B04", "bucket": "B_model", "query": "PureAir X2 适用多大面积", "gt": [{"category": "商品规格", "questions": "PureAir X2 空气净化器"}]}
+{"id": "B05", "bucket": "B_model", "query": "SoundMax HD-900 有哪些接口", "gt": [{"category": "商品规格", "questions": "SoundMax 头戴式耳机"}]}
+{"id": "B06", "bucket": "B_model", "query": "CFXB-50B 质保几年", "gt": [{"category": "商品规格", "questions": "CFXB-50B 电饭煲"}]}
+{"id": "B07", "bucket": "B_model", "query": "QR-80B 有几档水温", "gt": [{"category": "商品规格", "questions": "QR-80B 台式净饮一体机"}]}
+{"id": "B08", "bucket": "B_model", "query": "通用滤芯三件套更换周期", "gt": [{"category": "商品规格", "questions": "通用滤芯三件套"}]}
+{"id": "C01", "bucket": "C_colloquial", "query": "东西坏了咋整", "gt": [{"category": "售后", "questions": "商品有质量问题怎么办"}]}
+{"id": "C02", "bucket": "C_colloquial", "query": "寄回去要我出钱吗", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "C03", "bucket": "C_colloquial", "query": "不想要了能退不", "gt": [{"category": "退货政策", "questions": "七天无理由退货"}]}
+{"id": "C04", "bucket": "C_colloquial", "query": "咋样才能不掏邮费", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "C05", "bucket": "C_colloquial", "query": "想开个票", "gt": [{"category": "售后", "questions": "怎么开发票"}]}
+{"id": "C06", "bucket": "C_colloquial", "query": "VIP 有啥好处", "gt": [{"category": "会员说明", "questions": "会员权益"}]}
+{"id": "C07", "bucket": "C_colloquial", "query": "邮费是多少", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "C08", "bucket": "C_colloquial", "query": "当日的当天能送到吗", "gt": [{"category": "配送说明", "questions": "【关键条款】当日达服务"}]}
+{"id": "D01", "bucket": "D_absent", "query": "你们公司股价多少", "gt": []}
+{"id": "D02", "bucket": "D_absent", "query": "你们 CEO 是谁", "gt": []}
+{"id": "D03", "bucket": "D_absent", "query": "开发票的税务编码是多少", "gt": []}
+{"id": "D04", "bucket": "D_absent", "query": "支持货到付款吗", "gt": []}
+{"id": "D05", "bucket": "D_absent", "query": "净水器能过滤重金属吗", "gt": []}
+{"id": "D06", "bucket": "D_absent", "query": "可以用花呗分期吗", "gt": []}
+{"id": "E01", "bucket": "E_multi", "query": "质量问题退货和不喜欢退货的运费差别", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "E02", "bucket": "E_multi", "query": "会员免邮券和满99包邮能叠加吗", "gt": [{"category": "退货政策", "questions": "运费说明"}, {"category": "会员说明", "questions": "会员权益"}]}
+{"id": "E03", "bucket": "E_multi", "query": "保修期外的维修谁出钱", "gt": [{"category": "售后手册", "questions": "维修服务"}, {"category": "售后手册", "questions": "价目表"}]}
+{"id": "E04", "bucket": "E_multi", "query": "保修维修要多久", "gt": [{"category": "售后手册", "questions": "维修服务"}]}
+{"id": "E05", "bucket": "E_multi", "query": "当日达几点前下单有效", "gt": [{"category": "配送说明", "questions": "【关键条款】当日达服务"}]}
+{"id": "E06", "bucket": "E_multi", "query": "退货超过七天还能退吗", "gt": [{"category": "退货政策", "questions": "【关键条款】退货时效"}]}
+{"id": "A11", "bucket": "A_policy", "query": "会员费多少钱怎么开通", "gt": [{"category": "会员说明", "questions": "会员费与开通"}]}
+{"id": "A12", "bucket": "A_policy", "query": "会员怎么取消续费", "gt": [{"category": "会员说明", "questions": "会员费与开通"}]}
+{"id": "A13", "bucket": "A_policy", "query": "什么情况建议转人工客服", "gt": [{"category": "售后手册", "questions": "人工转接"}]}
+{"id": "A14", "bucket": "A_policy", "query": "退货上门取件怎么收费", "gt": [{"category": "售后手册", "questions": "价目表"}]}
+{"id": "A15", "bucket": "A_policy", "query": "保修期外的维修怎么收费", "gt": [{"category": "售后手册", "questions": "价目表"}]}
+{"id": "A16", "bucket": "A_policy", "query": "白条支持几期分期", "gt": [{"category": "会员说明", "questions": "付款方式"}]}
+{"id": "A17", "bucket": "A_policy", "query": "补发配件要钱吗", "gt": [{"category": "售后手册", "questions": "价目表"}]}
+{"id": "A18", "bucket": "A_policy", "query": "电子发票多久能开好", "gt": [{"category": "售后", "questions": "怎么开发票"}]}
+{"id": "A19", "bucket": "A_policy", "query": "换货的运费谁出", "gt": [{"category": "售后手册", "questions": "换货流程"}]}
+{"id": "A20", "bucket": "A_policy", "query": "大件搬运上楼怎么收费", "gt": [{"category": "售后手册", "questions": "价目表"}]}
+{"id": "B09", "bucket": "B_model", "query": "AirDots 3 防水等级是多少", "gt": [{"category": "商品规格", "questions": "AirDots 3 真无线耳机"}]}
+{"id": "B10", "bucket": "B_model", "query": "PureAir X2 用什么级别滤网", "gt": [{"category": "商品规格", "questions": "PureAir X2 空气净化器"}]}
+{"id": "B11", "bucket": "B_model", "query": "CFXB-40A 的内胆什么材质", "gt": [{"category": "商品规格", "questions": "【关键条款】CFXB-40A 电饭煲"}]}
+{"id": "B12", "bucket": "B_model", "query": "QR-80B 水箱多大容量", "gt": [{"category": "商品规格", "questions": "QR-80B 台式净饮一体机"}]}
+{"id": "B13", "bucket": "B_model", "query": "SoundMax HD-900 续航多久", "gt": [{"category": "商品规格", "questions": "SoundMax 头戴式耳机"}]}
+{"id": "B14", "bucket": "B_model", "query": "电饭煲内胆配件单买质保多久", "gt": [{"category": "商品规格", "questions": "电饭煲内胆配件"}]}
+{"id": "B15", "bucket": "B_model", "query": "CFXB-50B 用什么方式加热", "gt": [{"category": "商品规格", "questions": "CFXB-50B 电饭煲"}]}
+{"id": "C09", "bucket": "C_colloquial", "query": "坏了想直接换个新的", "gt": [{"category": "售后手册", "questions": "换货流程"}]}
+{"id": "C10", "bucket": "C_colloquial", "query": "咋升级黑金会员", "gt": [{"category": "会员说明", "questions": "会员等级"}]}
+{"id": "C11", "bucket": "C_colloquial", "query": "白条能分期不", "gt": [{"category": "会员说明", "questions": "付款方式"}]}
+{"id": "C12", "bucket": "C_colloquial", "query": "咋投诉你们", "gt": [{"category": "售后手册", "questions": "投诉升级"}]}
+{"id": "C13", "bucket": "C_colloquial", "query": "坏了修要不要钱", "gt": [{"category": "售后手册", "questions": "维修服务"}]}
+{"id": "C14", "bucket": "C_colloquial", "query": "多久给送过来", "gt": [{"category": "物流", "questions": "物流几天能到"}]}
+{"id": "C15", "bucket": "C_colloquial", "query": "退钱几天能到账", "gt": [{"category": "退货政策", "questions": "退款时效"}]}
+{"id": "C16", "bucket": "C_colloquial", "query": "听说买满多少免运费", "gt": [{"category": "退货政策", "questions": "运费说明"}]}
+{"id": "C17", "bucket": "C_colloquial", "query": "定制的东西能退不", "gt": [{"category": "退货政策", "questions": "七天无理由退货"}]}
+{"id": "C18", "bucket": "C_colloquial", "query": "黑金卡有啥特权", "gt": [{"category": "会员说明", "questions": "会员权益"}]}
+{"id": "C19", "bucket": "C_colloquial", "query": "退货咋让人来取件", "gt": [{"category": "售后手册", "questions": "价目表"}]}
+{"id": "C20", "bucket": "C_colloquial", "query": "小家电坏了是修还是换", "gt": [{"category": "售后手册", "questions": "维修服务"}]}
+{"id": "D07", "bucket": "D_absent", "query": "你们公司总部在哪", "gt": []}
+{"id": "D08", "bucket": "D_absent", "query": "有 App 可以下载吗", "gt": []}
+{"id": "D09", "bucket": "D_absent", "query": "客服热线电话是多少", "gt": []}
+{"id": "D10", "bucket": "D_absent", "query": "你们和京东什么关系", "gt": []}
+{"id": "D11", "bucket": "D_absent", "query": "支付账号怎么注销", "gt": []}
+{"id": "D12", "bucket": "D_absent", "query": "商品是正品吗怎么验证", "gt": []}
+{"id": "D13", "bucket": "D_absent", "query": "有线下的实体门店吗", "gt": []}
+{"id": "D14", "bucket": "D_absent", "query": "你们有会员日活动吗", "gt": []}
+{"id": "D15", "bucket": "D_absent", "query": "购物积分怎么兑换", "gt": []}
+{"id": "D16", "bucket": "D_absent", "query": "优惠券在哪里领取", "gt": []}
+{"id": "D17", "bucket": "D_absent", "query": "学生下单有优惠吗", "gt": []}
+{"id": "D18", "bucket": "D_absent", "query": "老用户回归有礼包吗", "gt": []}
+{"id": "D19", "bucket": "D_absent", "query": "食品的保质期怎么看", "gt": []}
+{"id": "D20", "bucket": "D_absent", "query": "跨境购的税费怎么算", "gt": []}
+{"id": "D21", "bucket": "D_absent", "query": "可以指定发顺丰吗", "gt": []}
+{"id": "D22", "bucket": "D_absent", "query": "礼品包装要收费吗", "gt": []}
+{"id": "D23", "bucket": "D_absent", "query": "商品条码能查真伪吗", "gt": []}
+{"id": "D24", "bucket": "D_absent", "query": "招商加盟怎么联系", "gt": []}
+{"id": "D25", "bucket": "D_absent", "query": "供应商入驻流程是什么", "gt": []}
+{"id": "D26", "bucket": "D_absent", "query": "数据隐私政策在哪里看", "gt": []}
+{"id": "D27", "bucket": "D_absent", "query": "账号被盗了怎么办", "gt": []}
+{"id": "D28", "bucket": "D_absent", "query": "未成年人可以自己下单吗", "gt": []}
+{"id": "D29", "bucket": "D_absent", "query": "纸质发票丢了能补开吗", "gt": []}
+{"id": "D30", "bucket": "D_absent", "query": "退款能退到别人的银行卡吗", "gt": []}
+{"id": "E07", "bucket": "E_multi", "query": "会员免邮券和满99包邮什么关系", "gt": [{"category": "退货政策", "questions": "运费说明"}, {"category": "会员说明", "questions": "会员权益"}]}
+{"id": "E08", "bucket": "E_multi", "query": "保修维修和换货哪个快", "gt": [{"category": "售后手册", "questions": "维修服务"}, {"category": "售后手册", "questions": "换货流程"}]}
+{"id": "E09", "bucket": "E_multi", "query": "签收超过七天但商品有质量问题还能退吗", "gt": [{"category": "退货政策", "questions": "【关键条款】退货时效"}]}
+{"id": "E10", "bucket": "E_multi", "query": "预售的商品什么时候发货", "gt": [{"category": "物流", "questions": "多久能发货"}]}
+{"id": "E11", "bucket": "E_multi", "query": "会员生日礼盒什么等级才有", "gt": [{"category": "会员说明", "questions": "会员权益"}]}
+{"id": "E12", "bucket": "E_multi", "query": "投诉升级的响应时限是多久", "gt": [{"category": "售后手册", "questions": "投诉升级"}]}
+{"id": "E13", "bucket": "E_multi", "query": "净水器整机质保和配件质保差多久", "gt": [{"category": "商品规格", "questions": "QR-50A 厨下净水器"}, {"category": "商品规格", "questions": "电饭煲内胆配件"}]}
+{"id": "E14", "bucket": "E_multi", "query": "当日达超时了怎么赔付", "gt": [{"category": "配送说明", "questions": "【关键条款】当日达服务"}]}
+{"id": "E15", "bucket": "E_multi", "query": "电子发票和纸质发票有什么区别", "gt": [{"category": "售后", "questions": "怎么开发票"}]}

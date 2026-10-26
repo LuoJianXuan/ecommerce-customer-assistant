@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>评估与台账 · 云优选</title>
+<style>
+  :root { --ink:#2b2320; --bg:#f2dcab; --panel:#fbf1dc; --card:#fffdf6;
+          --orange:#f08b3e; --coral:#f4694b; --green:#3fae5a; --muted:#8a7a5f; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+         color:var(--ink); background-color:var(--bg);
+         background-image:linear-gradient(rgba(43,35,32,.055) 1px,transparent 1px),
+                          linear-gradient(90deg,rgba(43,35,32,.055) 1px,transparent 1px);
+         background-size:28px 28px; padding:24px 12px; }
+  .wrap { max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+  .panel { background:var(--panel); border:3px solid var(--ink); box-shadow:8px 8px 0 var(--ink); }
+  header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px;
+           background:var(--orange); border-bottom:3px solid var(--ink); }
+  header h1 { font-size:18px; } header .sub { font-size:11px; margin-top:2px; }
+  .btn { font:inherit; font-size:13px; font-weight:700; padding:7px 13px; background:var(--card);
+         color:var(--ink); border:2.5px solid var(--ink); box-shadow:3px 3px 0 var(--ink); cursor:pointer;
+         text-decoration:none; color:inherit; display:inline-block; }
+  .btn:active:not(:disabled) { transform:translate(3px,3px); box-shadow:none; }
+  .btn:disabled { opacity:.55; cursor:not-allowed; }
+  .btn.primary { background:var(--coral); color:#fffdf6; }
+  .btn.small { font-size:12px; padding:4px 10px; box-shadow:2px 2px 0 var(--ink); }
+  .section { padding:16px 18px; border-bottom:3px solid var(--ink); }
+  .section:last-child { border-bottom:none; }
+  .sec-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .sec-head h2 { font-size:15px; } .sec-head .note { font-size:11.5px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th,td { text-align:left; padding:7px 8px; border-bottom:1.5px solid rgba(43,35,32,.25); vertical-align:top; }
+  th { font-size:11.5px; color:var(--muted); }
+  tr.best { background:#d8f0de; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-bottom:12px; }
+  .bigcard { background:var(--card); border:2.5px solid var(--ink); box-shadow:3px 3px 0 var(--ink); padding:12px 15px; }
+  .bigcard .num { font-size:26px; font-weight:800; }
+  .bigcard .lbl { font-size:12px; margin-top:2px; font-weight:700; }
+  .bigcard .formula { font-size:10.5px; color:var(--muted); margin-top:4px; line-height:1.5; }
+  .pill { display:inline-block; font-size:10.5px; padding:1px 7px; border:1.5px solid var(--ink); border-radius:4px; }
+  .pill.未解决 { background:#fde3b8; } .pill.已解决 { background:#d8f0de; } .pill.无需解决 { background:#e8e3f8; }
+  .pill.bucket { background:#e8e3f8; }
+  .case { border:2px solid var(--ink); box-shadow:2px 2px 0 var(--ink); background:var(--card); margin-bottom:10px; }
+  .case-head { padding:8px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; cursor:pointer; }
+  .case-body { display:none; border-top:2px solid var(--ink); padding:10px 12px; font-size:12.5px; }
+  .case.open .case-body { display:block; }
+  .case-body .fld { margin-bottom:8px; }
+  .case-body .fld b { font-size:11px; color:var(--muted); display:block; margin-bottom:2px; }
+  .case-body .txt { white-space:pre-wrap; word-break:break-word; line-height:1.65; background:var(--panel);
+                    border:1.5px solid var(--ink); padding:7px 10px; }
+  .cites { border:1.5px dashed var(--muted); padding:7px 10px; margin-top:4px; font-size:11.5px; line-height:1.6; }
+  .cites .n { font-weight:700; color:var(--coral); }
+  .resolve-row { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .resolve-row input { flex:1; min-width:220px; font:inherit; font-size:12px; padding:6px 9px;
+                        background:var(--panel); border:2px solid var(--ink); outline:none; }
+  .terminal { background:#241c19; color:#d8e6c0; font-family:Consolas,"Courier New",monospace;
+              font-size:12px; line-height:1.75; padding:12px 14px; border:2.5px solid var(--ink);
+              box-shadow:3px 3px 0 var(--ink); min-height:110px; max-height:260px; overflow-y:auto; }
+  .terminal .cmd { color:#f0b46a; } .terminal .ok { color:#8fd39a; } .terminal .err { color:#f08c7d; }
+  .msg { font-size:12px; padding:6px 10px; border:2px solid var(--ink); display:none; margin-top:8px; }
+  .msg.ok { background:#d8f0de; } .msg.err { background:#f8cfc5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <header>
+      <div><h1>📊 评估与编造台账 · 云优选</h1>
+        <div class="sub">四策略对比 × 分桶指标 · 编造个案审阅处置 · 就地重跑</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="/">💬 聊天</a><a class="btn" href="/kb">📚 知识库</a><a class="btn" href="/review">🧭 审核台</a><a class="btn" href="/topic">🏷️ 主题分布</a>
+      </div>
+    </header>
+
+    <!-- ① 两率 -->
+    <div class="section">
+      <div class="sec-head"><h2>① 幻觉两率</h2><span class="note" id="runTs"></span></div>
+      <div class="cards">
+        <div class="bigcard"><div class="num" id="detectRate">-</div><div class="lbl">判出率（本轮）</div>
+          <div class="formula">=（本轮裁判判出的编造个案 + 库外该拒没拒）÷ 实际评上的题数。只算本轮，台账跨轮累计另计。两率的差距就是裁判的误报量。</div></div>
+        <div class="bigcard"><div class="num" id="confirmRate">-</div><div class="lbl">确认幻觉率（下界）</div>
+          <div class="formula">= 人工过目后点成「已解决」的个案 ÷ 同分母。判严的（无需解决）不算、还没过目的不算——它是下界，会随着处置往上走。</div></div>
+        <div class="bigcard"><div class="num" id="refusalRate">-</div><div class="lbl">库外拒答率</div>
+          <div class="formula">库外题只要答了就是无据而答，不用人工确认，两边都算进判出。</div></div>
+      </div>
+    </div>
+
+    <!-- ② 四策略完整表 -->
+    <div class="section">
+      <div class="sec-head"><h2>② 检索段：四策略完整数据表</h2>
+        <span class="note">覆盖度 R@5 / R@10 与 MRR 并排 · 底色行为总体最优策略</span></div>
+      <div style="overflow-x:auto"><table id="retrTable"></table></div>
+    </div>
+
+    <!-- ③ 生成段 -->
+    <div class="section">
+      <div class="sec-head"><h2>③ 生成段：分桶忠实度（hybrid_rerank）</h2>
+        <span class="note">这一栏不是越接近 1.00 越好——重点是顺着个案找到该改的地方</span></div>
+      <div style="overflow-x:auto"><table id="genTable"></table></div>
+    </div>
+
+    <!-- ④ 编造个案台账 -->
+    <div class="section">
+      <div class="sec-head"><h2>④ 编造个案台账</h2>
+        <span class="note">默认收起，点开看问题/生成答案/裁判理由/证据快照 · 处置必须留一句交代</span></div>
+      <div id="caseList"><span style="color:var(--muted);font-size:12.5px">暂无个案（本轮裁判未判出编造，或还没跑过评估）</span></div>
+    </div>
+
+    <!-- ⑤ 就地重跑 -->
+    <div class="section">
+      <div class="sec-head"><h2>⑤ 就地重跑</h2>
+        <span class="note">跑的就是终端那条 make eval-rag —— 四策略 × 100 题，日志逐行回显，跑完本页数字换成新报告</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn primary" id="runBtn">▶ 就地重跑（make eval-rag）</button>
+      </div>
+      <div class="msg err" id="runMsg"></div>
+      <div class="terminal" id="term"><span style="color:#8a7a5f">$ 等待操作…</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const pct = x => (x ?? 0) == null ? "-" : `${Math.round(x*100)}%`;
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+  return r.json();
+}
+
+// ---- 报告渲染 ----
+async function loadReport() {
+  const rep = await api("/api/eval/report").catch(() => null);
+  if (!rep || !rep.exists) return;
+  $("runTs").textContent = `最近一轮：${rep.run_ts} · ${rep.cases_total} 题`;
+  // ② 检索段表
+  const buckets = ["A_policy","B_model","C_colloquial","E_multi","ALL"];
+  const strats = ["dense","bm25","hybrid","hybrid_rerank"];
+  const best = strats.reduce((a,b) => rep.retrieval[b].ALL.mrr > rep.retrieval[a].ALL.mrr ? b : a);
+  let html = "<tr><th>策略</th>" + buckets.map(b => `<th>${b} R@5/R@10/MRR</th>`).join("") + "</tr>";
+  for (const st of strats) {
+    html += `<tr class="${st===best?"best":""}"><td><b>${st}</b>${st===best?" 🏆":""}</td>` +
+      buckets.map(b => { const d = rep.retrieval[st][b] || {};
+        return `<td>${pct(d.r5)} / ${pct(d.r10)} / ${(d.mrr??0).toFixed(3)}</td>`; }).join("") + "</tr>";
+  }
+  $("retrTable").innerHTML = html;
+  // ③ 生成段表
+  const gen = rep.generation || {};
+  let g = "<tr><th>桶</th><th>评上</th><th>编造</th><th>忠实率</th></tr>";
+  for (const [b, d] of Object.entries(gen.by_bucket || {}))
+    g += `<tr><td>${esc(b)}</td><td>${d.judged}</td><td>${d.fabricated}</td><td>${d.judged ? pct(1 - d.fabricated/d.judged) : "-"}</td></tr>`;
+  const rt = (gen.refused_correct||0) + (gen.refused_wrong||0);
+  g += `<tr class="best"><td>D_absent 拒答</td><td>${rt}</td><td>${gen.refused_wrong||0}（该拒未拒）</td><td>${rt ? pct(gen.refused_correct/rt) : "-"}</td></tr>`;
+  $("genTable").innerHTML = g;
+}
+
+// ---- 台账 ----
+async function loadCases() {
+  const data = await api("/api/eval/cases").catch(() => null);
+  if (!data) return;
+  const r = data.rates || {};
+  $("detectRate").textContent = r.detect_rate != null ? pct(r.detect_rate) : "-";
+  $("confirmRate").textContent = r.confirm_rate != null ? pct(r.confirm_rate) : "-";
+  const rep = await api("/api/eval/report").catch(() => ({}));
+  const rt = ((rep.generation||{}).refused_correct||0) + ((rep.generation||{}).refused_wrong||0);
+  $("refusalRate").textContent = rt ? pct((rep.generation||{}).refused_correct / rt) : "-";
+  if (!data.items.length) return;
+  $("caseList").innerHTML = data.items.map(c => `
+    <div class="case" data-id="${esc(c.eval_id)}">
+      <div class="case-head">
+        <span class="pill bucket">${esc(c.bucket)}</span>
+        <b style="flex:1;min-width:200px">${esc(c.eval_id)} · ${esc(c.query)}</b>
+        <span class="pill ${esc(c.status)}">${esc(c.status)}</span>
+        <span style="font-size:11px;color:var(--muted)">判 ${c.seen_count} 次 · 最近 ${esc(c.last_seen_at)}</span>
+      </div>
+      <div class="case-body">
+        <div class="fld"><b>生成答案原文</b><div class="txt">${esc(c.answer)}</div></div>
+        <div class="fld"><b>裁判理由（编在哪一句）</b><div class="txt">${esc(c.reason)}</div></div>
+        <div class="fld"><b>证据全集快照（当时喂进去的就是这些）</b>
+          <div class="cites">${c.citations.length ? c.citations.map(m =>
+            `<div><span class="n">[${m.n}]</span> ${esc(m.section_path||"")} · <b>${esc(m.question)}</b>：${esc((m.answer||"").slice(0,120))}${(m.answer||"").length>120?"…":""}</div>`).join("")
+            : "（无证据——库外题）"}</div></div>
+        ${c.resolution ? `<div class="fld"><b>处置交代</b><div class="txt">${esc(c.resolution)}</div></div>` : ""}
+        <div class="resolve-row">
+          <input type="text" placeholder="处置必须留一句交代：怎么解决的（补了哪格/改了哪条）或为什么不用改" data-in="${esc(c.eval_id)}">
+          <button class="btn small primary" data-resolve="${esc(c.eval_id)}" data-st="已解决">✓ 已解决</button>
+          <button class="btn small" data-resolve="${esc(c.eval_id)}" data-st="无需解决">~ 无需解决</button>
+        </div>
+      </div>
+    </div>`).join("");
+  document.querySelectorAll(".case-head").forEach(h => h.onclick = e => {
+    if (e.target.closest("button,input")) return;
+    h.parentElement.classList.toggle("open");
+  });
+  document.querySelectorAll("[data-resolve]").forEach(btn => btn.onclick = async () => {
+    const id = btn.dataset.resolve;
+    const input = document.querySelector(`[data-in="${id}"]`);
+    if (!input.value.trim() || input.value.trim().length < 5) { alert("处置必须留一句交代（≥5 字）"); return; }
+    try {
+      await api(`/api/eval/cases/${id}/resolve`, { method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ status: btn.dataset.st, resolution: input.value.trim() }) });
+      await loadCases();
+    } catch (e) { alert(e.message); }
+  });
+}
+
+// ---- 就地重跑 ----
+let runJobId = null, logOffset = 0;
+$("runBtn").onclick = async () => {
+  try {
+    const job = await api("/api/eval/run", { method: "POST" });
+    runJobId = job.id; logOffset = 0;
+    $("term").innerHTML = "";
+    $("runBtn").disabled = true;
+    $("runMsg").style.display = "none";
+    pollLog();
+  } catch (e) {
+    $("runMsg").textContent = e.message; $("runMsg").style.display = "block";
+  }
+};
+async function pollLog() {
+  if (!runJobId) return;
+  try {
+    const data = await api(`/api/eval/jobs/${runJobId}/log?after=${logOffset}`);
+    logOffset = data.total;
+    const t = $("term");
+    for (const line of data.lines) {
+      const div = document.createElement("div");
+      div.className = line.startsWith("$") ? "cmd" : (line.startsWith("✓") ? "ok" : (line.startsWith("✗") ? "err" : ""));
+      div.textContent = line;
+      t.appendChild(div);
+    }
+    t.scrollTop = t.scrollHeight;
+    const jobs = await api("/api/eval/jobs");
+    const job = jobs.items.find(j => j.id === runJobId);
+    if (job && job.status !== "running") {
+      $("runBtn").disabled = false; runJobId = null;
+      await loadReport(); await loadCases();
+      return;
+    }
+  } catch (e) { /* 下次再试 */ }
+  setTimeout(pollLog, 3000);
+}
+
+loadReport(); loadCases();
+</script>
+</body>
+</html>

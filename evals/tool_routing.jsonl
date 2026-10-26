@@ -1,0 +1,9 @@
+{"text": "订单1001的物流到哪了", "expected_tool": "query_logistics", "note": "验收1场景：物流查询路由"}
+{"text": "帮我查一下订单1001现在什么状态", "expected_tool": "query_order", "note": "订单状态查询路由"}
+{"text": "你们的蓝牙耳机多少钱", "expected_tool": "query_product", "note": "商品价格查询路由"}
+{"text": "电饭煲还有货吗", "expected_tool": "query_product", "note": "商品库存查询路由"}
+{"text": "退货政策是什么", "expected_tool": "query_faq", "note": "验收2场景：政策类走FAQ"}
+{"text": "怎么开发票", "expected_tool": "query_faq", "note": "流程类走FAQ"}
+{"text": "太气人了，我要投诉你们", "expected_tool": "create_ticket", "note": "情绪/投诉转人工"}
+{"text": "邮费是多少", "expected_tool": "query_faq", "note": "路由预期走FAQ；但LIKE查不到「邮费」（库内无此关键词），预期漏召回，留给ch03向量检索"}
+{"text": "你好，在吗", "expected_tool": null, "note": "寒暄不应调工具"}

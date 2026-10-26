@@ -1,0 +1,32 @@
+{
+  "started_at": "2026-10-26T10:16:53.888980+08:00",
+  "original_cases_sha256": "8b96130cad1fc8e72a5d49f12f1aa6ad4488f5d95908124ad0ab4d15996c8e4b",
+  "corrected_cases_sha256": "22f699679aa5883f5559cee6eb914059efd076935619164209d826d626fa3433",
+  "knowledge_sha256": "d4838c7f1ee5e45f9e0d08af219a837b3ae28e34e5fa35ebb873b58eab2692c6",
+  "milvus_sha256": "34d69c08234967ac35f103b41e1af150f86b7e9ba6eeac92b954510ead703899",
+  "governance_counts": {
+    "active": 39,
+    "quarantined": 250
+  },
+  "active_count": 39,
+  "milvus_count": 39,
+  "bucket_counts": {
+    "A_policy": 23,
+    "B_model": 15,
+    "C_colloquial": 21,
+    "D_absent": 27,
+    "E_multi": 14
+  },
+  "answerability_counts": {
+    "full": 70,
+    "absent": 27,
+    "partial": 3
+  },
+  "gate_positive_label": "full or partial evidence; not a guarantee of complete answers",
+  "metric_limitations": [
+    "Chapter-based GT may include table introductory blocks.",
+    "E13 asks purifier accessories but legacy GT includes rice-cooker liner; no inference across products is allowed.",
+    "E15 asks e-/paper-invoice differences but KB documents only electronic issuance; unsupported portions must be declined.",
+    "Overlapping/contradictory membership, warranty, delivery and return-window texts remain in the KB; this run does not rewrite business policies."
+  ]
+}

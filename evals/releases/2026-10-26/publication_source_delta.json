@@ -1,0 +1,24 @@
+{
+  "evaluated_head": "90c8530e7f15650de034e0d87ddba5bb55239e27",
+  "evaluated_source_dirty": true,
+  "differing_recorded_files": [
+    {
+      "path": "app/config.py",
+      "evaluated_sha256": "5e6fc174bfc00d0d84e9dd8a78947e293b6d40bb11a65bf033891bbff09f99d7",
+      "publication_sha256": "dabee0ad5dfc8f908dc55ae33cd78cdff45bcb5b65a537b5551ff7c362af31b8"
+    },
+    {
+      "path": "app/agent/graph.py",
+      "evaluated_sha256": "8889aa46ed97bc390572ba2a48a9c3b135e9ecbadb124a357dc2d5533c7414c9",
+      "publication_sha256": "a55b4f4f25cf37fb24770642c7ccbe2da2cbc2f064b8ec7d2121eb3dda627a5f"
+    }
+  ],
+  "publication_tools_sha256": {
+    "evals/run_audit.py": "5b6de25ddac387c3231480d09f595dd63cb8106f698281ae098ef04b1bee0070",
+    "evals/retry_judges.py": "8e176d6ab82ec80895fd6c2e8a1401319796985330fd6881d6db6c835a157f92",
+    "evals/verify_release.py": "429dab8bf441643195ea7e03da924457beb3bf58f3fe1d1864da1a791aee66c9",
+    "scripts/init_db.py": "5f21c82a7ce2dac99f40ea20db2c7d633168e9f5fdc2e7c92a839e1697b3c19d",
+    "scripts/load_eval_knowledge.py": "5231dd74acb578ecedf9b699a8c7e94ff17f72ad6e740dfc98608e598dcc2d88"
+  },
+  "note": "Public sanitization and packaging changes; no new model evaluation has been performed."
+}

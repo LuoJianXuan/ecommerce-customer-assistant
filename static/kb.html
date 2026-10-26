@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识库管理 · 云优选</title>
+<style>
+  :root {
+    --ink: #2b2320; --bg: #f2dcab; --panel: #fbf1dc; --card: #fffdf6;
+    --orange: #f08b3e; --coral: #f4694b; --green: #3fae5a; --muted: #8a7a5f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink); background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(43,35,32,.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43,35,32,.055) 1px, transparent 1px);
+    background-size: 28px 28px; padding: 24px 12px;
+  }
+  .wrap { max-width: 1020px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: var(--panel); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px;
+           background: var(--orange); border-bottom: 3px solid var(--ink); }
+  header h1 { font-size: 18px; }
+  header .sub { font-size: 11px; margin-top: 2px; }
+  .btn { font: inherit; font-size: 13px; font-weight: 700; padding: 7px 13px;
+         background: var(--card); color: var(--ink); border: 2.5px solid var(--ink);
+         box-shadow: 3px 3px 0 var(--ink); cursor: pointer; }
+  .btn:active:not(:disabled) { transform: translate(3px,3px); box-shadow: none; }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn.primary { background: var(--coral); color: #fffdf6; }
+  .btn.small { font-size: 12px; padding: 4px 10px; box-shadow: 2px 2px 0 var(--ink); }
+  .section { padding: 16px 18px; border-bottom: 3px solid var(--ink); }
+  .section:last-child { border-bottom: none; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+              flex-wrap: wrap; margin-bottom: 12px; }
+  .sec-head h2 { font-size: 15px; }
+  .sec-head .note { font-size: 11.5px; color: var(--muted); }
+  .badge { font-size: 12px; font-weight: 700; padding: 4px 11px; background: var(--card);
+           border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+  .badge.warn { background: #fde3b8; }
+  /* 指标四宫格 */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .card { background: var(--card); border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+          padding: 10px 13px; }
+  .card .num { font-size: 22px; font-weight: 800; line-height: 1.2; }
+  .card .lbl { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .card.warn .num { color: var(--coral); }
+  .card.ok .num { color: var(--green); }
+  .card.milvus-bad { background: #f8cfc5; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1.5px solid rgba(43,35,32,.25); vertical-align: top; }
+  th { font-size: 11.5px; color: var(--muted); }
+  input[type=text], textarea {
+    font: inherit; font-size: 13px; padding: 8px 10px; background: var(--card);
+    border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); outline: none;
+  }
+  input[type=text]:focus, textarea:focus { background: #fff; }
+  .pill { display: inline-block; font-size: 10.5px; padding: 1px 7px; border: 1.5px solid var(--ink); border-radius: 4px; }
+  .pill.done { background: #d8f0de; } .pill.pending { background: #fde3b8; }
+  .pill.ctype { background: #e8e3f8; } .pill.key { background: #f8cfc5; }
+  .pill.kept { background: #d8f0de; } .pill.discarded { background: #eee; } .pill.extracted { background: #fde3b8; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .expandable { display: none; margin-top: 10px; }
+  .expandable.open { display: block; }
+  .chunkcard { background: var(--card); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+               padding: 8px 11px; font-size: 12.5px; margin-bottom: 8px; }
+  .chunkcard .path { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .chunkcard .body { white-space: pre-wrap; word-break: break-word; line-height: 1.6; max-height: 120px; overflow: hidden; }
+  .hit { background: var(--card); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+         padding: 10px 13px; margin-bottom: 9px; }
+  .hit .meta { display: flex; gap: 8px; align-items: center; font-size: 11.5px; margin-bottom: 4px; }
+  .hit .score { font-weight: 700; color: var(--coral); }
+  .hit .body { font-size: 12.5px; white-space: pre-wrap; word-break: break-word; line-height: 1.65; }
+  /* 终端日志 */
+  .terminal { background: #241c19; color: #d8e6c0; font-family: Consolas, "Courier New", monospace;
+              font-size: 12px; line-height: 1.75; padding: 12px 14px; border: 2.5px solid var(--ink);
+              box-shadow: 3px 3px 0 var(--ink); min-height: 90px; max-height: 240px; overflow-y: auto; }
+  .terminal .cmd { color: #f0b46a; }
+  .terminal .ok { color: #8fd39a; }
+  .terminal .err { color: #f08c7d; }
+  .terminal .dim { color: #8a7a5f; }
+  .msg { font-size: 12.5px; padding: 6px 10px; border: 2px solid var(--ink); display: none; margin-top: 8px; }
+  .msg.ok { background: #d8f0de; } .msg.err { background: #f8cfc5; }
+  textarea.doc { width: 100%; min-height: 140px; resize: vertical; font-family: Consolas, monospace; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <header>
+      <div>
+        <h1>📚 知识库管理 · 云优选</h1>
+        <div class="sub">原文权威源 MySQL · 向量 Milvus · 嵌入 BGE-M3（dense 单路）</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="/" style="text-decoration:none;color:inherit;">💬 聊天</a><a class="btn" href="/review" style="text-decoration:none;color:inherit;">🧭 审核台</a><a class="btn" href="/eval" style="text-decoration:none;color:inherit;">📈 评估台账</a><a class="btn" href="/topic" style="text-decoration:none;color:inherit;">🏷️ 主题分布</a></div>
+    </header>
+
+    <!-- ① 总体指标 -->
+    <div class="section">
+      <div class="sec-head"><h2>① 总体指标</h2><span class="note">知识块总数 = 双写账本行数；挖矿三态见 ③</span></div>
+      <div class="cards" id="overallCards"></div>
+    </div>
+
+    <!-- ② 建库材料 -->
+    <div class="section">
+      <div class="sec-head">
+        <h2>② 建库材料</h2>
+        <span class="badge" id="matBadge">…</span>
+      </div>
+      <div class="note" style="font-size:11.5px;color:var(--muted);margin-bottom:8px">
+        材料就地切一遍做干跑预览（不写库、不碰 Milvus），核对切块口径后可直跑离线建库。
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>文件</th><th>类型</th><th>字符</th><th>行</th><th>切块</th><th>关键条款</th><th>特性</th><th></th></tr></thead>
+          <tbody id="matRows"></tbody>
+        </table>
+      </div>
+      <div class="expandable" id="matChunks"></div>
+      <div class="actions">
+        <button class="btn" id="rerunPreview">🔁 重跑 · 材料清单与切块预览</button>
+        <button class="btn primary" data-job="build-docs">🧱 直跑离线建库（文档切块→pending→向量化）</button>
+      </div>
+    </div>
+
+    <!-- ③ 对话挖知识 -->
+    <div class="section">
+      <div class="sec-head">
+        <h2>③ 对话挖知识</h2>
+        <span class="badge" id="mineBadge">…</span>
+      </div>
+      <div class="cards" id="mineCards"></div>
+      <div class="actions">
+        <button class="btn primary" data-job="mine">⛏ 重跑 · 对话挖知识（QA→拒答过滤→待审）</button>
+        <button class="btn" id="toggleStaging">📋 查看暂存表数据</button>
+      </div>
+      <div class="expandable" id="stagingBox">
+        <table>
+          <thead><tr><th>#</th><th>批次</th><th>问法</th><th>答案摘要</th><th>状态</th></tr></thead>
+          <tbody id="stagingRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ④ 向量化与双写 -->
+    <div class="section">
+      <div class="sec-head">
+        <h2>④ 向量化与双写</h2>
+        <span class="badge" id="dwBadge">…</span>
+      </div>
+      <div class="cards" id="dwCards"></div>
+      <div class="actions">
+        <button class="btn primary" data-job="vectorize-pending">🔌 向量化补块（扫 pending → Milvus → done）</button>
+        <button class="btn" data-job="import-faq">📥 重跑 · FAQ 导入</button>
+        <button class="btn" id="toggleLedger">📒 查看双写账本</button>
+      </div>
+      <div class="expandable" id="ledgerBox">
+        <table>
+          <thead><tr><th>#</th><th>问法/标题</th><th>状态</th><th>vector_id</th><th>更新</th></tr></thead>
+          <tbody id="ledgerRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ⑤ 手工录入 -->
+    <div class="section">
+      <div class="sec-head"><h2>⑤ 手工录入</h2><span class="note">贴一段 Markdown，先切块预览（含查重）再入库</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input type="text" id="docTitle" placeholder="知识标题（同标题重导=整体替换，幂等）" style="width:100%">
+        <textarea class="doc" id="docMd" placeholder="# 标题一&#10;正文…&#10;## 标题二&#10;正文…（#/##/### 层级切块，表格自动复制表头，【关键条款】自动标记）"></textarea>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="previewBtn">👁 切块预览（不写库）</button>
+          <button class="btn primary" id="ingestBtn" disabled>📦 确认入库</button>
+        </div>
+        <div id="dupHint" class="msg err" style="display:none"></div>
+        <div id="previewList"></div>
+        <div class="msg ok" id="ingestMsg"></div>
+      </div>
+    </div>
+
+    <!-- ⑥ 检索自测 -->
+    <div class="section">
+      <div class="sec-head"><h2>⑥ 检索自测</h2><span class="note">换个说法问一句，看召回对不对（如「邮费是多少」）</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input type="text" id="searchQ" placeholder="输入查询语句…" style="flex:1;min-width:200px">
+        <button class="btn" id="searchBtn">🔍 检索</button>
+      </div>
+      <div id="hits" style="margin-top:10px"></div>
+    </div>
+
+    <!-- 终端日志 -->
+    <div class="section">
+      <div class="sec-head"><h2>🐚 操作日志</h2><span class="note">页面上的操作等价于终端跑命令，输出在这儿一样看得到</span></div>
+      <div class="terminal" id="term"><span class="dim">$ 等待操作…（重跑/入库/补块/挖矿的输出会回显在这里）</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let previewed = null;
+const seenJobs = new Set();
+
+const JOB_CMD = {
+  "build-docs": "make kb-docs        # 文档切块→MySQL(pending)→Milvus→done",
+  "import-faq": "make kb-faq-import  # faq 表导入知识库",
+  "vectorize-pending": "make kb-vectorize  # 扫 pending 补齐向量化",
+  "mine": "make kb-mine        # 历史对话分批抽QA→去重→入库",
+  "ingest": null,
+};
+
+async function api(path, opts) {
+  const resp = await fetch(path, opts);
+  if (!resp.ok) throw new Error((await resp.json().catch(() => ({}))).detail || `HTTP ${resp.status}`);
+  return resp.json();
+}
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m])); }
+function term(type, text) {
+  const t = $("term");
+  if (t.querySelector(".dim")) t.innerHTML = "";
+  const line = document.createElement("div");
+  line.className = type;
+  line.textContent = text;
+  t.appendChild(line);
+  t.scrollTop = t.scrollHeight;
+}
+const ts = () => new Date().toTimeString().slice(0, 8);
+
+// ---- ①④ 总览 + 双写指标（同源刷新）----
+async function loadDualwrite() {
+  const d = await api("/api/kb/dualwrite");
+  const total = d.done + d.pending;
+  $("overallCards").innerHTML = `
+    <div class="card"><div class="num">${total}</div><div class="lbl">知识块总数</div></div>
+    <div class="card ok"><div class="num">${d.done}</div><div class="lbl">已向量化 done</div></div>
+    <div class="card ${d.pending ? "warn" : ""}"><div class="num">${d.pending}</div><div class="lbl">待向量化 pending</div></div>
+    <div class="card ${d.milvus_count < 0 ? "milvus-bad" : ""}"><div class="num">${d.milvus_count < 0 ? "✗" : d.milvus_count}</div><div class="lbl">Milvus 条数 · ${esc(d.collection)}</div></div>`;
+  $("dwCards").innerHTML = `
+    <div class="card ${d.pending ? "warn" : ""}"><div class="num">${d.pending}</div><div class="lbl">pending 待补</div></div>
+    <div class="card ok"><div class="num">${d.done}</div><div class="lbl">done 已嵌入</div></div>
+    <div class="card"><div class="num">${d.milvus_count < 0 ? "✗" : d.milvus_count}</div><div class="lbl">Milvus 条数</div></div>
+    <div class="card"><div class="num" style="font-size:15px;padding-top:5px">${esc(d.collection)}</div><div class="lbl">Milvus 集合</div></div>`;
+  $("dwBadge").textContent = d.milvus_count < 0 ? "Milvus 不可达" :
+    (d.pending === 0 ? `同步快上 ✓（${d.done}）` : `缺 ${d.pending} 块待补`);
+  $("dwBadge").className = "badge" + (d.pending || d.milvus_count < 0 ? " warn" : "");
+  window._ledger = d.ledger;
+}
+
+// ---- ② 材料 ----
+async function loadMaterials() {
+  const m = await api("/api/kb/materials");
+  $("matBadge").textContent = `${m.count} 份材料 / 共可切 ${m.total_chunks} 块`;
+  $("matRows").innerHTML = m.items.map((it, idx) => `
+    <tr><td>${esc(it.file)}</td>
+        <td><span class="pill ctype">${esc(it.type)}</span></td>
+        <td>${it.chars}</td><td>${it.lines}</td><td>${it.chunks}</td><td>${it.key_clauses}</td>
+        <td>${esc(it.features)}</td>
+        <td><button class="btn small" data-mat="${idx}">看切块</button></td></tr>`).join("");
+  window._mats = m.items;
+  document.querySelectorAll("[data-mat]").forEach(b => b.onclick = () => showMatChunks(m.items[+b.dataset.mat]));
+}
+async function showMatChunks(mat) {
+  const src = mat.file.startsWith("faq") ? "FAQ知识库" : mat.file.replace(/\.md$/, "");
+  const { items } = await api(`/api/kb/chunks?source=${encodeURIComponent(src)}&limit=100`);
+  const box = $("matChunks");
+  box.classList.add("open");
+  box.innerHTML = `<div class="note" style="margin-bottom:6px">「${esc(mat.file)}」库内 ${items.length} 块：</div>` +
+    (items.length ? items.map(c => `
+      <div class="chunkcard"><div class="path">${esc(c.section_path || c.category)}${c.is_key_clause ? " · 关键条款" : ""}</div>
+      <div class="body"><b>${esc(c.questions)}</b>\n${esc(c.answer)}</div></div>`).join("")
+    : `<div class="note">库里还没有该材料的块（还没跑过建库）</div>`);
+  term("dim", `$ # ${mat.file} 库内 ${items.length} 块（source=${src}）`);
+}
+$("rerunPreview").onclick = () => { loadMaterials(); term("cmd", `$ make kb-preview  # 材料干跑切块（${ts()}）`); };
+
+// ---- ③ 挖知识 ----
+async function loadMining() {
+  const m = await api("/api/kb/mining");
+  $("mineBadge").textContent = m.runs ? `已挖 ${m.runs} 轮` : "还没跑过";
+  $("mineCards").innerHTML = `
+    <div class="card ${m.extracted ? "warn" : ""}"><div class="num">${m.extracted}</div><div class="lbl">已挖出待入库 extracted</div></div>
+    <div class="card ok"><div class="num">${m.kept}</div><div class="lbl">去重保留已入库 kept</div></div>
+    <div class="card"><div class="num">${m.discarded}</div><div class="lbl">去重丢弃 discarded</div></div>
+    <div class="card"><div class="num">${m.runs}</div><div class="lbl">挖矿次数</div></div>`;
+  window._staging = m.recent;
+  const rows = $("stagingRows");
+  rows.innerHTML = m.recent.length ? m.recent.map(r => `
+    <tr><td>${r.id}</td><td>${esc(r.batch_no)}</td><td>${esc(r.question)}</td>
+        <td>${esc(r.answer)}…</td><td><span class="pill ${r.status}">${r.status}</span></td></tr>`).join("")
+    : `<tr><td colspan="5" style="color:var(--muted)">暂存表为空</td></tr>`;
+}
+$("toggleStaging").onclick = () => $("stagingBox").classList.toggle("open");
+
+// ---- ④ 账本 ----
+$("toggleLedger").onclick = () => {
+  $("ledgerBox").classList.toggle("open");
+  const rows = $("ledgerRows");
+  const led = window._ledger || [];
+  rows.innerHTML = led.length ? led.map(r => `
+    <tr><td>${r.id}</td><td>${esc(r.questions)}</td>
+        <td><span class="pill ${r.vectorize_status}">${r.vectorize_status}</span></td>
+        <td>${esc(r.vector_id ?? "-")}</td><td>${esc(r.updated_at)}</td></tr>`).join("")
+  : `<tr><td colspan="5" style="color:var(--muted)">暂无数据</td></tr>`;
+};
+
+// ---- ⑤ 录入 ----
+$("previewBtn").onclick = async () => {
+  const md = $("docMd").value.trim();
+  if (!md) return;
+  const p = await api("/api/kb/preview", post({ markdown: md }));
+  previewed = md;
+  const dup = $("dupHint");
+  if (p.dup_count > 0) { dup.textContent = `查重：${p.dup_count}/${p.count} 块疑似与库内已有问法重复（入库仍会写入，同标题整体替换）`; dup.style.display = "block"; }
+  else { dup.style.display = "none"; }
+  $("previewList").innerHTML = `<div class="note" style="margin-bottom:6px">共 ${p.count} 块${p.dup_count ? "（⚠ " + p.dup_count + " 块疑似重复）" : "（查重：无重复，可入库）"}：</div>` +
+    p.chunks.map(c => `
+      <div class="chunkcard"><div class="path">${esc(c.section_path || c.category)}${c.is_key_clause ? " · 关键条款" : ""}</div>
+      <div class="body">${esc(c.answer)}</div></div>`).join("");
+  $("ingestBtn").disabled = false;
+  term("dim", `$ # 预览 ${p.count} 块，查重 ${p.dup_count} 块`);
+};
+$("ingestBtn").onclick = async () => {
+  const title = $("docTitle").value.trim();
+  if (!title || $("docMd").value.trim() !== previewed) { showMsg("ingestMsg", "请先填标题并完成切块预览（正文改过要重新预览）", true); return; }
+  $("ingestBtn").disabled = true;
+  const r = await api("/api/kb/ingest", post({ title, markdown: previewed }));
+  showMsg("ingestMsg", `已提交：${r.chunks} 块落库并向量化（任务状态见日志区）`, false);
+  term("cmd", `$ make kb-ingest ${title}  # 手工入库（${ts()}）`);
+};
+function post(body) { return { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }; }
+function showMsg(id, text, isErr) { const el = $(id); el.textContent = text; el.className = `msg ${isErr ? "err" : "ok"}`; el.style.display = "block"; }
+
+// ---- ⑥ 检索自测 ----
+$("searchBtn").onclick = async () => {
+  const q = $("searchQ").value.trim();
+  if (!q) return;
+  $("searchBtn").disabled = true;
+  try {
+    const { hits } = await api(`/api/kb/search?q=${encodeURIComponent(q)}`);
+    $("hits").innerHTML = hits.length ? hits.map(h => `
+      <div class="hit"><div class="meta"><span class="score">${(h.score ?? 0).toFixed(3)}</span>
+        <span class="pill ctype">${esc(h.category)}</span></div>
+        <div class="body"><b>${esc(h.question)}</b>\n${esc(h.answer)}</div></div>`).join("")
+      : `<div style="color:var(--muted);font-size:12.5px">未命中任何知识块</div>`;
+    term("dim", `$ # 检索「${q}」Top-${hits.length}${hits.length ? " 首条 " + (hits[0].score ?? 0).toFixed(3) : ""}`);
+  } finally { $("searchBtn").disabled = false; }
+};
+$("searchQ").addEventListener("keydown", e => { if (e.key === "Enter") $("searchBtn").click(); });
+
+// ---- 任务按钮 + 轮询 + 日志回显 ----
+document.querySelectorAll("[data-job]").forEach(btn => btn.onclick = async () => {
+  const kind = btn.dataset.job;
+  try {
+    await api(`/api/kb/jobs/${kind}`, { method: "POST" });
+    term("cmd", `$ ${JOB_CMD[kind] || kind}  # ${ts()}`);
+  } catch (e) { term("err", `$ ! 任务启动失败：${e.message}`); }
+});
+async function poll() {
+  try {
+    const { items } = await api("/api/kb/jobs");
+    for (const j of items) {
+      if (seenJobs.has(j.id + j.status)) continue;
+      seenJobs.add(j.id + j.status);
+      if (j.status === "running") term("cmd", `$ ${JOB_CMD[j.kind] ?? j.kind}  # 运行中 [${j.id}]`);
+      else if (j.status === "done") { term("ok", `✓ [${j.id}] ${j.label} → ${typeof j.result === "object" ? JSON.stringify(j.result) : j.result}`); loadDualwrite(); loadMining(); }
+      else term("err", `✗ [${j.id}] ${j.label} → ${j.result}`);
+    }
+  } catch (e) { /* 下次轮询再试 */ }
+}
+setInterval(() => { poll(); }, 2500);
+
+loadDualwrite(); loadMaterials(); loadMining(); poll();
+</script>
+</body>
+</html>

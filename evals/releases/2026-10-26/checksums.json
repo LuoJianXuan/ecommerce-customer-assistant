@@ -1,0 +1,21 @@
+{
+  "eval_cases.jsonl": "22f699679aa5883f5559cee6eb914059efd076935619164209d826d626fa3433",
+  "gate_calibration.json": "a8af289864761e48b4c3de8f84d9371a54b1f6002da7ba50791154f7ec749dec",
+  "generation_cases.jsonl": "cf12f1485a24ed62da69eaa5f5178a3f2475a14fb555b92b27ef2f4d0a914322",
+  "generation_cases_before_judge_retry.jsonl": "9f7ce5b127fdf62286a5bde2c890f088ee250ae39e132e62aed0908ccc1d4024",
+  "ground_truth_ids.json": "afc6e86527d1da4fa453061d7c50d77c669846ba8235e6af0245ec286b42ab48",
+  "judge_retry.json": "277382a2a1fda9b9fe67f56c03b868baded2ce92f0e601f578b6b8bf01d07348",
+  "knowledge_snapshot.json": "af46ec7aa77b5db0b1f184949b8708c9b6a8a480b5808323b02ab0c44a112f62",
+  "label_revisions.json": "933aa0a565f984ddd61f75f814f650b9b855fadc7fcf92067644002a7ab16639",
+  "manifest.json": "40d5fcd990f43dcd2fb03181050d7541e5fead36c06169b092bdf18fddac3c3d",
+  "milvus_text_snapshot.json": "34d69c08234967ac35f103b41e1af150f86b7e9ba6eeac92b954510ead703899",
+  "publication_source_delta.json": "2a9e80dcd015f1379306c98d7b89dc187564401c817a78605120c45ed9a64ec1",
+  "query_rewrites.jsonl": "3a9e7df409eaf51b58e91ea75f4515ff211a019248785efb03c7f11c35fc4554",
+  "record_manifest.json": "cc072da94370aa9295072b7ec5776155dac1cb4ad9fb736073ef6d9b56de14a0",
+  "report.json": "e2cbdbb9c627027b345d04ea7a0ca846c29a2c18866205d47063021d1bc524db",
+  "report.md": "8af1f06943d0b0c059acc603371147957b4f2d1682e4c8e2f8747b5b6a729558",
+  "retrieval_cases.jsonl": "1cf2f32bf3049ca3cf31ec61c22287d30e0333f4cef3eb450c2de51ed3b49d99",
+  "retrieval_summary.json": "e4e13e707de8aa2c501c83db3575966c6ae426806f2e9a25274335c6f6203542",
+  "run_config.json": "dae88c82254d24d8d7723dc5697c8b23ba338dea0f183b417890fed1b13f1573",
+  "runner_record.py": "f13224c909712bf09d101adb819fbb237db0af24ba62502ef78e112158ffc26d"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "rag": {
+    "run_id": "2026-10-26",
+    "directory": "evals/releases/2026-10-26",
+    "cases_total": 100,
+    "reference_bearing": 73,
+    "fully_supported": 70,
+    "partially_supported": 3,
+    "absent": 27
+  },
+  "topic": {
+    "run_id": "2026-10-23-topic",
+    "directory": "evals/releases/2026-10-23-topic",
+    "test_rows": 510,
+    "threshold": 0.4
+  },
+  "note": "Frozen published evaluations; chapter reports and UI reruns are separate working outputs."
+}

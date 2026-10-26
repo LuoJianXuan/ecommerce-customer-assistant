@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小云 · 智能客服</title>
+<style>
+  :root {
+    --ink: #2b2320;
+    --bg: #f2dcab;
+    --panel: #fbf1dc;
+    --bubble-bot: #fffdf6;
+    --orange: #f08b3e;
+    --coral: #f4694b;
+    --muted: #8a7a5f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(43,35,32,.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43,35,32,.055) 1px, transparent 1px);
+    background-size: 28px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+  }
+  .card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--panel);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink);
+    display: flex;
+    flex-direction: column;
+    height: min(760px, calc(100vh - 48px));
+  }
+  /* ---------- 页眉 ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--orange);
+    border-bottom: 3px solid var(--ink);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .avatar-badge {
+    width: 46px; height: 46px; flex: none;
+    background: #fffdf6;
+    border: 3px solid var(--ink);
+    border-radius: 10px;
+    box-shadow: 3px 3px 0 var(--ink);
+    display: grid; place-items: center;
+  }
+  .brand h1 { font-size: 17px; letter-spacing: .5px; }
+  .status { font-size: 11px; margin-top: 3px; letter-spacing: .5px; }
+  .status .dot {
+    display: inline-block; width: 8px; height: 8px; margin-right: 4px;
+    background: #3fae5a; border: 1.5px solid var(--ink);
+    vertical-align: 1px;
+  }
+  .btn-new {
+    flex: none;
+    font: inherit; font-size: 13px; font-weight: 700;
+    padding: 8px 14px;
+    background: #fffdf6; color: var(--ink);
+    border: 2.5px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    cursor: pointer;
+  }
+  .btn-new:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: none; }
+  .btn-new:disabled { opacity: .6; cursor: not-allowed; }
+  /* ---------- 对话区 ---------- */
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #messages::-webkit-scrollbar { width: 10px; }
+  #messages::-webkit-scrollbar-track { background: var(--panel); border-left: 2px solid var(--ink); }
+  #messages::-webkit-scrollbar-thumb { background: var(--orange); border: 2px solid var(--ink); }
+  .row { display: flex; }
+  .row.bot { align-items: flex-end; gap: 8px; }
+  .row.user { justify-content: flex-end; }
+  .chip {
+    width: 28px; height: 28px; flex: none;
+    background: #fffdf6;
+    border: 2px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 2px 2px 0 var(--ink);
+    display: grid; place-items: center;
+  }
+  .bubble {
+    max-width: 78%;
+    padding: 10px 14px;
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    font-size: 14px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .bot .bubble { background: var(--bubble-bot); }
+  .user .bubble { background: var(--coral); }
+  .bubble.error { color: #b3261e; }
+  /* 工具轨迹徽章：本轮调用的工具，像素小方块风 */
+  .tool-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .tool-badges:empty { display: none; }
+  .tool-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 2px 7px;
+    background: #fde3b8;
+    border: 1.5px solid var(--ink);
+    box-shadow: 1.5px 1.5px 0 var(--ink);
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .tool-note { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .dots { display: inline-flex; gap: 5px; padding: 3px 0; }
+  .dots i {
+    width: 7px; height: 7px; background: var(--ink);
+    animation: blink 1.2s infinite;
+  }
+  .dots i:nth-child(2) { animation-delay: .2s; }
+  .dots i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
+  /* ---------- ch04：引用角标与满意度反馈 ---------- */
+  .bubble-text sup.cite {
+    display: inline-block; cursor: pointer; user-select: none;
+    font-size: 10.5px; line-height: 1; padding: 2px 5px; margin: 0 1px;
+    background: #fde3b8; border: 1.5px solid var(--ink); border-radius: 4px;
+    vertical-align: super;
+  }
+  .bubble-text sup.cite:hover { background: var(--orange); }
+  #citePopover {
+    display: none; position: fixed; z-index: 50; width: min(480px, 90vw);
+    max-height: 60vh; overflow-y: auto;
+    background: var(--panel); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink);
+    padding: 14px 16px; font-size: 12.5px;
+  }
+  #citePopover .path { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  #citePopover .q { font-weight: 700; margin-bottom: 6px; }
+  #citePopover .body { white-space: pre-wrap; word-break: break-word; line-height: 1.7; }
+  #citePopover .close { float: right; cursor: pointer; font-weight: 700; }
+  .feedback {
+    display: none; margin-top: 6px; gap: 8px; align-items: center;
+    font-size: 11.5px; color: var(--muted);
+  }
+  .feedback.show { display: inline-flex; }
+  .fb-btn {
+    cursor: pointer; font-size: 14px; padding: 2px 7px;
+    background: var(--bubble-bot); border: 1.5px solid var(--ink); border-radius: 4px;
+  }
+  .fb-btn.on { background: #d8f0de; box-shadow: 2px 2px 0 var(--ink); }
+  .fb-btn:disabled { cursor: default; opacity: .85; }
+  .fb-done { color: var(--green); font-weight: 700; display: none; }
+  /* ---------- ch05：转人工/建工单建议按钮 ---------- */
+  .suggestion-bar { display: flex; gap: 8px; margin-top: 8px; }
+  .sg-btn {
+    font: inherit; font-size: 12.5px; font-weight: 700; padding: 6px 12px; cursor: pointer;
+    background: #fde3b8; color: var(--ink); border: 2px solid var(--ink);
+    border-radius: 6px; box-shadow: 2px 2px 0 var(--ink);
+  }
+  .sg-btn:active:not(:disabled) { transform: translate(2px,2px); box-shadow: none; }
+  .sg-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .human-agent .bubble { background: #d8f0de; }
+  /* ---------- ch06：订单选择器卡片（聊天流里点选回填） ---------- */
+  .order-picker { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; width: min(400px, 100%); }
+  .order-card {
+    display: grid; grid-template-columns: 1fr auto; gap: 3px 10px;
+    font: inherit; text-align: left; cursor: pointer;
+    background: #fffdf6; color: var(--ink);
+    border: 2.5px solid var(--ink); border-radius: 8px; box-shadow: 3px 3px 0 var(--ink);
+    padding: 10px 12px;
+  }
+  .order-card:active:not(:disabled) { transform: translate(2px,2px); box-shadow: none; }
+  .order-card:disabled { cursor: not-allowed; opacity: .55; }
+  .order-card.picked:disabled { opacity: 1; background: #d8f0de; }
+  .order-card .name { font-weight: 700; font-size: 13.5px; }
+  .order-card .amt { font-weight: 700; align-self: center; font-size: 13.5px; }
+  .order-card .no { font-size: 11px; color: var(--muted); }
+  .order-badge {
+    display: inline-block; font-size: 11px; padding: 2px 7px; margin-left: 6px;
+    background: #fde3b8; border: 1.5px solid var(--ink); border-radius: 4px;
+    vertical-align: 1px;
+  }
+  /* ch06 修复轮：指代消解提示条（对齐教程「🔍 指代消解：A → B」） */
+  .resolve-note {
+    font-size: 11.5px; color: var(--muted);
+    border: 1.5px dashed var(--ink); border-radius: 6px;
+    background: #fdf7e8; padding: 4px 8px; margin-bottom: 8px;
+    word-break: break-all;
+  }
+  /* ---------- ch05：建工单弹窗表单（ch06：#refundModal 退款表单共用） ---------- */
+  #ticketModal, #refundModal {
+    display: none; position: fixed; inset: 0; z-index: 60;
+    background: rgba(43,35,32,.45);
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .ticket-panel {
+    width: min(460px, 94vw); background: var(--panel);
+    border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); padding: 16px 18px;
+  }
+  .ticket-panel h3 { font-size: 15px; }
+  .ticket-panel .sub { font-size: 11px; color: var(--muted); margin: 3px 0 12px; }
+  .ticket-panel label { display: block; font-size: 12px; font-weight: 700; margin: 10px 0 4px; }
+  .ticket-panel label .req { color: var(--coral); }
+  .ticket-panel select, .ticket-panel textarea {
+    width: 100%; font: inherit; font-size: 13px; padding: 8px 10px;
+    background: #fffdf6; border: 2.5px solid var(--ink); outline: none; resize: vertical;
+  }
+  .ticket-panel textarea { min-height: 84px; }
+  .ticket-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+  /* ---------- ch07：会话侧栏 ---------- */
+  .layout { display: flex; flex: 1; min-height: 0; }
+  .sidebar {
+    width: 198px; flex: none; display: flex; flex-direction: column;
+    border-right: 3px solid var(--ink); background: #f7e9c8;
+  }
+  .sidebar h2 { font-size: 13px; letter-spacing: 1px; padding: 10px 12px 6px; }
+  .btn-new-chat {
+    margin: 0 10px 8px; font: inherit; font-size: 12px; font-weight: 700;
+    padding: 6px 10px; cursor: pointer; background: #fffdf6; color: var(--ink);
+    border: 2px solid var(--ink); border-radius: 6px; box-shadow: 2px 2px 0 var(--ink);
+  }
+  .btn-new-chat:active { transform: translate(2px,2px); box-shadow: none; }
+  #convList { flex: 1; overflow-y: auto; padding: 0 8px 8px; display: flex; flex-direction: column; gap: 6px; }
+  #convList:empty::after { content: "暂无历史会话"; font-size: 11px; color: var(--muted); padding: 6px; }
+  .conv-item {
+    text-align: left; cursor: pointer; font: inherit; font-size: 12px; line-height: 1.4;
+    background: #fffdf6; color: var(--ink); border: 2px solid var(--ink); border-radius: 6px;
+    box-shadow: 2px 2px 0 var(--ink); padding: 6px 8px;
+    display: flex; gap: 5px; align-items: flex-start; overflow: hidden;
+  }
+  .conv-item:active { transform: translate(1px,1px); box-shadow: none; }
+  .conv-item.active { background: var(--orange); }
+  .conv-item .sum-mark { flex: none; font-size: 12px; }
+  .conv-item .prev { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  /* ch08：工单预览卡片（确认流） */
+  .ticket-preview {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 8px;
+    width: min(380px, 100%); background: #fffdf6;
+    border: 2.5px solid var(--ink); border-radius: 8px; box-shadow: 3px 3px 0 var(--ink);
+    padding: 10px 12px;
+  }
+  .ticket-preview .tp-title { font-size: 13px; font-weight: 700; }
+  .ticket-preview .tp-type {
+    display: inline-block; font-size: 11px; padding: 2px 8px; margin-left: 6px;
+    background: #fde3b8; border: 1.5px solid var(--ink); border-radius: 4px;
+  }
+  .ticket-preview .tp-desc {
+    font-size: 12.5px; color: var(--ink); line-height: 1.6;
+    background: var(--panel); border: 1.5px dashed var(--ink); border-radius: 6px;
+    padding: 8px 10px; white-space: pre-wrap; word-break: break-word;
+  }
+  .ticket-preview .tp-actions { display: flex; gap: 8px; }
+  .tp-btn {
+    flex: 1; font: inherit; font-size: 12.5px; font-weight: 700; padding: 7px 0; cursor: pointer;
+    border: 2px solid var(--ink); border-radius: 6px; box-shadow: 2px 2px 0 var(--ink);
+  }
+  .tp-btn:active:not(:disabled) { transform: translate(2px,2px); box-shadow: none; }
+  .tp-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .tp-btn.ok { background: #d8f0de; }
+  .tp-btn.no { background: #fde3b8; }
+  /* ---------- 输入区 ---------- */
+  .composer { border-top: 3px solid var(--ink); padding: 14px 16px 10px; }
+  .input-row { display: flex; gap: 10px; align-items: flex-end; }
+  #input {
+    flex: 1;
+    font: inherit; font-size: 14px;
+    padding: 11px 12px;
+    min-height: 46px; max-height: 130px;
+    resize: none;
+    background: #fffdf6;
+    border: 2.5px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    outline: none;
+  }
+  #input:focus { background: #fff; }
+  #input::placeholder { color: #b3a488; }
+  #send {
+    width: 48px; height: 48px; flex: none;
+    background: var(--coral);
+    border: 2.5px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    cursor: pointer;
+    display: grid; place-items: center;
+  }
+  #send:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: none; }
+  #send:disabled { opacity: .55; cursor: not-allowed; }
+  .disclaimer { text-align: center; font-size: 11px; color: var(--muted); margin-top: 9px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <header>
+    <div class="brand">
+      <div class="avatar-badge" data-cat></div>
+      <div>
+        <h1>小云 · 智能客服</h1>
+        <div class="status"><span class="dot"></span>ONLINE · 云优选</div>
+      </div>
+    </div>
+    <button class="btn-new" id="new" type="button">＋ 新对话</button>
+    <div style="display:flex;gap:8px">
+      <a class="btn-new" href="/review" style="text-decoration:none;color:inherit;">🧭 审核台</a>
+      <a class="btn-new" href="/topic" style="text-decoration:none;color:inherit;">🏷️ 主题分布</a>
+      <a class="btn-new" href="/kb" style="text-decoration:none;color:inherit;">📚 知识库</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>🗂 会话</h2>
+      <button class="btn-new-chat" id="newChatSide" type="button">＋ 新会话</button>
+      <div id="convList"></div>
+    </aside>
+    <div class="main-col">
+      <div id="messages"></div>
+      <div class="composer">
+        <div class="input-row">
+          <textarea id="input" rows="1"
+            placeholder="输入消息，和小云聊聊吧~（回车发送 / Shift+回车换行）"></textarea>
+          <button id="send" type="button" aria-label="发送">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z" fill="#fffdf6" stroke="#2b2320" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <p class="disclaimer">小云是 AI 助手，涉及具体订单会为你转接人工核实</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="citePopover">
+    <span class="close" id="citeClose">✕</span>
+    <div class="path" id="citePath"></div>
+    <div class="q" id="citeQ"></div>
+    <div class="body" id="citeBody"></div>
+  </div>
+
+  <div id="ticketModal">
+    <div class="ticket-panel">
+      <h3>🎫 创建工单</h3>
+      <div class="sub">小云会把问题整理成工单跟进处理，提交前请确认类别与描述</div>
+      <label>工单类型 <span class="req">*</span></label>
+      <select id="ticketType">
+        <option value="投诉">投诉</option>
+        <option value="售后">售后</option>
+        <option value="咨询">咨询</option>
+      </select>
+      <label>问题描述 <span class="req">*</span></label>
+      <textarea id="ticketDesc" placeholder="请描述你遇到的问题…"></textarea>
+      <div class="ticket-actions">
+        <button class="btn" id="ticketCancel" type="button">取消</button>
+        <button class="btn primary" id="ticketSubmit" type="button">提交工单</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="refundModal">
+    <div class="ticket-panel">
+      <h3>💰 提交退款申请</h3>
+      <div class="sub" id="refundOrderInfo">订单 SO-xxx</div>
+      <label>退款原因 <span class="req">*</span></label>
+      <select id="refundReason">
+        <option value="七天无理由">七天无理由</option>
+        <option value="质量问题">质量问题</option>
+        <option value="与描述不符">与描述不符</option>
+        <option value="少件漏发">少件漏发</option>
+        <option value="不想要了">不想要了</option>
+        <option value="其他">其他</option>
+      </select>
+      <div class="ticket-actions">
+        <button class="btn" id="refundCancel" type="button">取消</button>
+        <button class="btn primary" id="refundSubmit" type="button">提交退款申请</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 像素猫头像（内联 SVG，header 徽章与客服气泡小徽章共用）
+  const CAT_SVG = `
+    <svg width="22" height="22" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">
+      <rect x="1" y="0" width="2" height="2" fill="#f08b3e"/>
+      <rect x="5" y="0" width="2" height="2" fill="#f08b3e"/>
+      <rect x="1" y="1" width="6" height="6" fill="#f08b3e"/>
+      <rect x="1" y="6" width="6" height="1" fill="#d97426"/>
+      <rect x="2" y="3" width="1" height="1" fill="#2b2320"/>
+      <rect x="5" y="3" width="1" height="1" fill="#2b2320"/>
+      <rect x="3" y="4" width="2" height="1" fill="#2b2320"/>
+      <rect x="2" y="5" width="1" height="1" fill="#f4694b"/>
+      <rect x="5" y="5" width="1" height="1" fill="#f4694b"/>
+    </svg>`;
+  document.querySelectorAll("[data-cat]").forEach(el => { el.innerHTML = CAT_SVG; });
+
+  const messagesEl = document.getElementById("messages");
+  const inputEl = document.getElementById("input");
+  const sendBtn = document.getElementById("send");
+  const newBtn = document.getElementById("new");
+
+  const GREETING = "您好！我是「云优选」的智能客服小云～很高兴为您服务。请问有什么关于商品、订单、物流或售后的问题需要咨询吗？";
+  // 访客 id：localStorage 持久化，作为 conversations.user_id
+  let visitorId = localStorage.getItem("kefu_visitor_id");
+  if (!visitorId) {
+    visitorId = "u-" + crypto.randomUUID().slice(0, 12);
+    localStorage.setItem("kefu_visitor_id", visitorId);
+  }
+  // 会话 id：由流首帧 meta 回填，续聊复用；「新对话」置空
+  let conversationId = null;
+  let streaming = false;
+
+  function addBubble(role, text = "", isError = false, messageId = null) {
+    const row = document.createElement("div");
+    row.className = `row ${role}`;
+    let chip = null;
+    if (role === "bot") {
+      chip = document.createElement("div");
+      chip.className = "chip";
+      chip.innerHTML = CAT_SVG;
+      row.appendChild(chip);
+    }
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    if (isError) bubble.classList.add("error");
+    const badgesEl = document.createElement("div");
+    badgesEl.className = "tool-badges";
+    const textEl = document.createElement("div");
+    textEl.className = "bubble-text";
+    textEl.textContent = text;
+    bubble.appendChild(badgesEl);
+    bubble.appendChild(textEl);
+    // ch09：满意度反馈携带会话与回复 id；差评进入知识缺口飞轮
+    const feedback = document.createElement("div");
+    feedback.className = "feedback";
+    feedback.innerHTML = `
+      <button class="fb-btn" data-v="up" type="button" aria-label="有帮助">👍</button>
+      <button class="fb-btn" data-v="down" type="button" aria-label="没帮助">👎</button>
+      <span class="fb-done">已反馈</span>`;
+    const parts = { bubble, textEl, badgesEl, feedback, citations: null, messageId };
+    feedback.querySelectorAll(".fb-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const buttons = feedback.querySelectorAll(".fb-btn");
+        buttons.forEach(b => { b.disabled = true; });
+        try {
+          const resp = await fetch("/api/agent/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              conversation_id: conversationId,
+              message_id: parts.messageId,
+              helpful: btn.dataset.v === "up",
+            }),
+          });
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          btn.classList.add("on");
+          const done = feedback.querySelector(".fb-done");
+          done.textContent = "已反馈";
+          done.style.display = "inline";
+        } catch (e) {
+          buttons.forEach(b => { b.disabled = false; });
+          const done = feedback.querySelector(".fb-done");
+          done.textContent = "反馈失败，请重试";
+          done.style.display = "inline";
+        }
+      });
+    });
+    bubble.appendChild(feedback);
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return parts;
+  }
+
+  function addToolBadge(badgesEl, toolName) {
+    const b = document.createElement("span");
+    b.className = "tool-badge";
+    b.textContent = "🔧 调用了 " + toolName;
+    badgesEl.appendChild(b);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  const DOTS_HTML = '<span class="dots"><i></i><i></i><i></i></span>';
+
+  function showTyping() {
+    const parts = addBubble("bot");
+    parts.textEl.innerHTML = DOTS_HTML;
+    return parts;
+  }
+
+  function setToolRunning(parts, toolName) {
+    const note = document.createElement("span");
+    note.className = "tool-note";
+    note.textContent = `正在调用 ${toolName}…`;
+    parts.textEl.innerHTML = "";
+    parts.textEl.appendChild(note);
+    parts.textEl.insertAdjacentHTML("beforeend", DOTS_HTML);
+  }
+
+  function resetSession() {
+    if (streaming) return;
+    conversationId = null;  // 新会话：下次发送由服务端懒建
+    messagesEl.innerHTML = "";
+    addBubble("bot", GREETING);
+    refreshSidebar();
+    inputEl.focus();
+  }
+
+  // ch07：会话侧栏——列出该用户全部会话，点击切换回载历史接着聊；加载失败静默降级
+  async function refreshSidebar() {
+    try {
+      const resp = await fetch(`/api/conversations?user_id=${encodeURIComponent(visitorId)}`);
+      if (!resp.ok) return;
+      const items = await resp.json();
+      const list = document.getElementById("convList");
+      list.innerHTML = "";
+      items.forEach(it => {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "conv-item" + (it.id === conversationId ? " active" : "");
+        const mark = it.has_summary ? "📚" : "💬";
+        el.innerHTML = `<span class="sum-mark">${mark}</span><span class="prev">${esc(it.preview || "（空）")}</span>`;
+        el.title = `${it.preview || ""} ${it.updated_at || ""}`.trim();
+        el.onclick = () => switchConversation(it.id);
+        list.appendChild(el);
+      });
+    } catch (e) { /* 静默降级：侧栏失败不影响聊天 */ }
+  }
+
+  async function switchConversation(id) {
+    if (streaming || id === conversationId) return;
+    conversationId = id;
+    messagesEl.innerHTML = "";
+    try {
+      const resp = await fetch(`/api/conversations/${id}/messages?user_id=${encodeURIComponent(visitorId)}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const msgs = await resp.json();
+      if (!msgs.length) addBubble("bot", GREETING);
+      msgs.forEach(m => addBubble(m.role === "user" ? "user" : "bot", m.content, false, m.id));
+    } catch (e) {
+      addBubble("bot", "（历史加载失败，不过不影响继续聊～）");
+    }
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    refreshSidebar();
+    inputEl.focus();
+  }
+
+  function esc(s) { return String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m])); }
+
+  // ch04：流结束后把 [n] 角标渲染成可点元素 + 显示满意度反馈
+  function renderCitations(parts) {
+    const { textEl, citations, feedback } = parts;
+    if (feedback) feedback.classList.add("show");
+    if (!citations || !citations.length) return;
+    const html = esc(textEl.textContent).replace(/\[(\d+)\]/g, (m, n) => {
+      const has = citations.some(c => c.n === +n);
+      return has ? `<sup class="cite" data-n="${n}">[${n}]</sup>` : m;
+    });
+    textEl.innerHTML = html;
+    textEl.querySelectorAll("sup.cite").forEach(sup => {
+      sup.addEventListener("click", () => {
+        const item = citations.find(c => c.n === +sup.dataset.n);
+        if (!item) return;
+        document.getElementById("citePath").textContent =
+          `来源 ${item.section_path || item.category || ""} · 块 #${item.chunk_id ?? "-"}`;
+        document.getElementById("citeQ").textContent = item.question || "";
+        document.getElementById("citeBody").textContent = item.answer || "";
+        const pop = document.getElementById("citePopover");
+        pop.style.display = "block";
+        pop.style.left = Math.max(20, Math.min(window.innerWidth - 520, 90)) + "px";
+        pop.style.top = "90px";
+      });
+    });
+  }
+  document.getElementById("citeClose").addEventListener("click", () => {
+    document.getElementById("citePopover").style.display = "none";
+  });
+
+  // 消费 POST /api/agent/chat 的 SSE 流：meta 回填会话 id、tool 出徽章、delta 逐段追加
+  // ch06：opts.resume 携带订单选择器点选结果（中断接续）；order_picker 帧带订单卡片数据
+  async function streamChat(message, parts, opts = {}) {
+    // 兜底：服务端 120 秒仍无完整响应则主动断开（正常远快于此）
+    const ctrl = new AbortController();
+    const killTimer = setTimeout(() => ctrl.abort(), 120000);
+    const body = { user_id: visitorId, conversation_id: conversationId, message: message ?? "" };
+    if (opts.resume) body.resume = opts.resume;
+    try {
+      const resp = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: ctrl.signal,
+      });
+      if (!resp.ok || !resp.body) throw new Error(`HTTP ${resp.status}`);
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let first = true;
+      let doneReceived = false;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        const events = buffer.split("\n\n");
+        buffer = events.pop(); // 留下未完整的尾部
+        for (const ev of events) {
+          const line = ev.split("\n").find(l => l.startsWith("data: "));
+          if (!line) continue;
+          const payload = JSON.parse(line.slice(6));
+          if (payload.type === "meta") {
+            conversationId = payload.conversation_id;
+            refreshSidebar();  // 新会话落库后侧栏可见
+        } else if (payload.type === "node") {
+          console.log("[node]", payload.name);  // 节点轨迹（验收在后端日志/inspect_state 看）
+        } else if (payload.type === "suggestions") {
+          parts.suggestions = payload.items;
+        } else if (payload.type === "resolved") {
+          // ch06 修复轮：消解提示条（消解版与原句不同才收到此帧）
+          const note = document.createElement("div");
+          note.className = "resolve-note";
+          note.textContent = `🔍 指代消解：${payload.raw} → ${payload.resolved}`;
+          parts.bubble.insertBefore(note, parts.textEl);
+        } else if (payload.type === "order_picker") {
+          parts.orderPicker = payload;  // {type, note?, orders}——子流程中断，待点选回填
+        } else if (payload.type === "ticket_confirm") {
+          parts.ticketPreview = payload;  // ch08：写操作确认——工单预览卡片
+        } else if (payload.type === "citations") {
+          parts.citations = payload.items;  // 证据全集：[n] → 来源 chunk
+        } else if (payload.type === "tool") {
+            addToolBadge(parts.badgesEl, payload.tool);
+            setToolRunning(parts, payload.tool);
+          } else if (payload.type === "delta") {
+            if (first) { parts.textEl.textContent = ""; first = false; }
+            parts.textEl.textContent += payload.content;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          } else if (payload.type === "error") {
+            throw new Error(payload.message);
+          } else if (payload.type === "done") {
+            parts.messageId = payload.assistant_message_id || null;
+            doneReceived = true;
+            return;
+          }
+        }
+      }
+      // 连接关闭但没等到 done：明确告知，不留"正在调用"假象
+      if (!doneReceived) {
+        if (!parts.textEl.textContent) {
+          parts.textEl.textContent = "（连接中断，未收到完整回复，请重试）";
+        } else {
+          parts.textEl.textContent += "\n（连接中断，回复可能不完整）";
+        }
+      }
+    } finally {
+      clearTimeout(killTimer);
+    }
+  }
+
+  async function send() {
+    const text = inputEl.value.trim();
+    if (!text || streaming) return;
+
+    streaming = true;
+    sendBtn.disabled = true;
+    newBtn.disabled = true;
+
+    document.querySelectorAll(".suggestion-bar, .order-picker").forEach(el => el.remove());  // 不点=正常对话，按钮/卡片随下轮回收
+    addBubble("user", text);
+    inputEl.value = "";
+    autosize();
+
+    const parts = showTyping();
+    parts.lastUserText = text;
+    try {
+      await streamChat(text, parts);
+      if (parts.orderPicker) {
+        // ch06：子流程在订单选择器暂停——渲染可点选订单卡片，点选后 resume 接续
+        // 提示文案用后端 note（点名了不存在订单时是「没有找到订单 1001…」的诚实提示）
+        parts.textEl.textContent = parts.orderPicker.note || "请点击选择要处理的订单，选好我就接着判断这一单～";
+        renderOrderPicker(parts);
+      } else if (parts.ticketPreview) {
+        // ch08：写操作确认——工单预览卡片（确认提交/取消）
+        parts.textEl.textContent = "这是一份工单预览，确认后我才会真正提交～";
+        renderTicketPreview(parts);
+      } else {
+        if (!parts.textEl.textContent) parts.textEl.textContent = "（回复为空）";
+        renderCitations(parts);
+        renderSuggestions(parts);
+      }
+    } catch (err) {
+      parts.bubble.classList.add("error");
+      parts.textEl.textContent = `出错了：${err.message}。请稍后重试。`;
+    } finally {
+      streaming = false;
+      sendBtn.disabled = false;
+      newBtn.disabled = false;
+      refreshSidebar();  // 预览/已摘要标记随轮次更新
+      inputEl.focus();
+    }
+  }
+
+  // ch05：转人工/建工单建议按钮；ch06：退款表单入口（互不绑定，都不点就当正常对话）
+  function renderSuggestions(parts) {
+    const items = parts.suggestions;
+    if (!items || !items.length) return;
+    const ICONS = { transfer_human: "🙋", create_ticket: "🎫", refund_form: "💰" };
+    const bar = document.createElement("div");
+    bar.className = "suggestion-bar";
+    items.forEach(it => {
+      const b = document.createElement("button");
+      b.className = "sg-btn";
+      b.type = "button";
+      b.textContent = ICONS[it.action] ? `${ICONS[it.action]} ${it.label}` : it.label;
+      b.onclick = async () => {
+        bar.querySelectorAll("button").forEach(x => x.disabled = true);
+        if (it.action === "transfer_human") {
+          addBubble("bot", "已为您转接人工客服，请稍候…");
+          addBubble("human-agent", "🐱 您好，我是客服小猫，请问有什么可以帮您的？");
+        } else if (it.action === "create_ticket") {
+          openTicketModal(it, parts);
+        } else if (it.action === "refund_form") {
+          openRefundModal(it);
+        }
+      };
+      bar.appendChild(b);
+    });
+    parts.bubble.appendChild(bar);
+  }
+
+  // ch06：订单选择器——聊天流里可点选的订单卡片，点选后 resume 自动回填、流程接着走
+  function renderOrderPicker(parts) {
+    const wrap = document.createElement("div");
+    wrap.className = "order-picker";
+    (parts.orderPicker.orders || []).forEach(o => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "order-card";
+      card.innerHTML = `
+        <span class="name">${esc(o.product_name)}<span class="order-badge">${esc(o.status)}</span></span>
+        <span class="amt">¥${Number(o.amount).toFixed(2)}</span>
+        <span class="no">${esc(o.order_no)} · ${esc(o.created_at)}</span>`;
+      card.onclick = () => pickOrder(wrap, card, o);
+      wrap.appendChild(card);
+    });
+    parts.bubble.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  async function pickOrder(wrap, card, order) {
+    if (streaming) return;
+    wrap.querySelectorAll(".order-card").forEach(c => { c.disabled = true; c.classList.toggle("picked", c === card); });
+    addBubble("user", `（已选择订单 ${order.order_no}）`);
+
+    streaming = true;
+    sendBtn.disabled = true;
+    newBtn.disabled = true;
+    const parts = showTyping();
+    try {
+      await streamChat(null, parts, { resume: { order_id: order.id } });
+      if (!parts.textEl.textContent) parts.textEl.textContent = "（回复为空）";
+      renderCitations(parts);
+      renderSuggestions(parts);
+    } catch (err) {
+      parts.bubble.classList.add("error");
+      parts.textEl.textContent = `出错了：${err.message}。请稍后重试。`;
+    } finally {
+      streaming = false;
+      sendBtn.disabled = false;
+      newBtn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  // ch06：退款表单弹窗——原因从固定类目下拉选，确认后才提交
+  let refundCtx = null;
+  function openRefundModal(item) {
+    refundCtx = item;
+    document.getElementById("refundOrderInfo").textContent =
+      `订单 ${item.payload?.order_no || ""}，提交后生成退款单，审核 1-3 个工作日`;
+    document.getElementById("refundReason").value = "七天无理由";
+    document.getElementById("refundModal").style.display = "flex";
+  }
+  function closeRefundModal() { document.getElementById("refundModal").style.display = "none"; }
+  document.getElementById("refundCancel").onclick = closeRefundModal;
+  document.getElementById("refundModal").addEventListener("click", e => { if (e.target.id === "refundModal") closeRefundModal(); });
+  document.getElementById("refundSubmit").onclick = async () => {
+    const reason = document.getElementById("refundReason").value;
+    document.getElementById("refundSubmit").disabled = true;
+    try {
+      const resp = await fetch("/api/agent/refund", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_id: conversationId, user_id: visitorId,
+          order_id: refundCtx?.payload?.order_id, reason,
+        }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(typeof data.detail === "string" ? data.detail : `HTTP ${resp.status}`);
+      closeRefundModal();
+      addBubble("bot", `💰 退款申请已提交：${data.refund_no}（${reason}），当前「${data.status}」，审核通过后 1-3 个工作日原路退回～`);
+    } catch (e) {
+      closeRefundModal();
+      addBubble("bot", `退款申请失败：${e.message}，请稍后再试或选择转人工。`);
+    } finally { document.getElementById("refundSubmit").disabled = false; }
+  };
+
+  // ch05：建工单弹窗——用户选类型、确认/编辑描述后才提交
+  let ticketCtx = null;
+  function openTicketModal(item, parts) {
+    ticketCtx = { item, parts };
+    document.getElementById("ticketType").value = item.payload?.ticket_type || "投诉";
+    document.getElementById("ticketDesc").value = item.payload?.description || parts.lastUserText || "";
+    document.getElementById("ticketModal").style.display = "flex";
+  }
+  function closeTicketModal() { document.getElementById("ticketModal").style.display = "none"; }
+  document.getElementById("ticketCancel").onclick = closeTicketModal;
+  document.getElementById("ticketModal").addEventListener("click", e => { if (e.target.id === "ticketModal") closeTicketModal(); });
+  document.getElementById("ticketSubmit").onclick = async () => {
+    const description = document.getElementById("ticketDesc").value.trim();
+    const ticket_type = document.getElementById("ticketType").value;
+    if (!description) { document.getElementById("ticketDesc").focus(); return; }
+    document.getElementById("ticketSubmit").disabled = true;
+    try {
+      const resp = await fetch("/api/agent/ticket", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ conversation_id: conversationId, description, ticket_type }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.detail || `HTTP ${resp.status}`);
+      closeTicketModal();
+      addBubble("bot", `🎫 工单已创建：${data.ticket_no}（${ticket_type}），专员会尽快跟进处理～`);
+    } catch (e) {
+      closeTicketModal();
+      addBubble("bot", `工单创建失败：${e.message}，请稍后再试或选择转人工。`);
+    } finally { document.getElementById("ticketSubmit").disabled = false; }
+  };
+
+  // ch08：工单预览卡片——确认才执行，取消走 resume{confirmed:false}（审计=权限拒绝）
+  function renderTicketPreview(parts) {
+    const p = parts.ticketPreview;
+    const card = document.createElement("div");
+    card.className = "ticket-preview";
+    const desc = document.createElement("div");
+    desc.className = "tp-desc";
+    desc.textContent = p.description || "（无描述）";
+    card.innerHTML = `<div class="tp-title">🎫 工单预览<span class="tp-type">${esc(p.ticket_type || "咨询")}</span></div>`;
+    card.appendChild(desc);
+    const actions = document.createElement("div");
+    actions.className = "tp-actions";
+    const ok = document.createElement("button");
+    ok.type = "button"; ok.className = "tp-btn ok"; ok.textContent = "✅ 确认提交";
+    const no = document.createElement("button");
+    no.type = "button"; no.className = "tp-btn no"; no.textContent = "取消";
+    ok.onclick = () => resolveTicket(card, ok, no, true);
+    no.onclick = () => resolveTicket(card, ok, no, false);
+    actions.append(ok, no);
+    card.appendChild(actions);
+    parts.bubble.appendChild(card);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  async function resolveTicket(card, okBtn, noBtn, confirmed) {
+    if (streaming) return;
+    okBtn.disabled = true; noBtn.disabled = true;
+    card.style.opacity = confirmed ? "" : ".55";
+    addBubble("user", confirmed ? "（确认提交工单）" : "（取消工单）");
+    streaming = true;
+    sendBtn.disabled = true;
+    newBtn.disabled = true;
+    const parts = showTyping();
+    try {
+      await streamChat(null, parts, { resume: { confirmed } });
+      if (!parts.textEl.textContent) parts.textEl.textContent = "（回复为空）";
+      renderCitations(parts);
+      renderSuggestions(parts);
+    } catch (err) {
+      parts.bubble.classList.add("error");
+      parts.textEl.textContent = `出错了：${err.message}。请稍后重试。`;
+    } finally {
+      streaming = false;
+      sendBtn.disabled = false;
+      newBtn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  function autosize() {
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 130) + "px";
+  }
+
+  sendBtn.addEventListener("click", send);
+  inputEl.addEventListener("input", autosize);
+  inputEl.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+  newBtn.addEventListener("click", resetSession);
+  document.getElementById("newChatSide").addEventListener("click", resetSession);
+  refreshSidebar();
+
+  addBubble("bot", GREETING);
+  inputEl.focus();
+</script>
+</body>
+</html>

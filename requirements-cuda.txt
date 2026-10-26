@@ -1,0 +1,5 @@
+# 当前恢复机器:Windows + RTX 2070 + NVIDIA 581.42。
+# 与 requirements.txt 联合解析，强制使用已验证的 CUDA 13.0 PyTorch 构建。
+--extra-index-url https://download.pytorch.org/whl/cu130
+-r requirements.txt
+torch==2.14.0+cu130

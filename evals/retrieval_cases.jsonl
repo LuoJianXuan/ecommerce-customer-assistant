@@ -1,0 +1,9 @@
+{"query": "邮费是多少", "expect_snippet": "99 元包邮", "note": "验收1：ch02 漏召回锚点，换说法命中运费说明"}
+{"query": "会员有什么权益", "expect_snippet": "全场折扣", "note": "ch02 压缩关键词漏召回案例"}
+{"query": "支持哪些付款方式", "expect_snippet": "微信支付", "note": "ch02 同义改写漏召回案例"}
+{"query": "怎么开发票", "expect_snippet": "申请电子发票", "note": "faq 真实问法直查"}
+{"query": "换货怎么办理", "expect_snippet": "换货申请", "note": "手册流程类"}
+{"query": "保修期多久", "expect_snippet": "1 年保修", "note": "手册维修类"}
+{"query": "退货需要什么凭证", "expect_snippet": "照片", "note": "政策文档深层节"}
+{"query": "投诉没人处理怎么办", "expect_snippet": "投诉升级", "note": "手册升级通道"}
+{"query": "退货超过七天还能退吗", "expect_snippet": "质量问题不受此限", "note": "关键条款语义边界"}

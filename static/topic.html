@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>主题分布 · 云优选</title>
+<style>
+  :root { --ink:#2b2320; --bg:#f2dcab; --panel:#fbf1dc; --card:#fffdf6; --orange:#f08b3e; --coral:#f4694b; --green:#3fae5a; --purple:#8d73c8; --muted:#8a7a5f; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif; color:var(--ink); background-color:var(--bg); background-image:linear-gradient(rgba(43,35,32,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(43,35,32,.055) 1px,transparent 1px); background-size:28px 28px; padding:24px 12px; }
+  .wrap { max-width:1120px; margin:auto; }
+  .panel { background:var(--panel); border:3px solid var(--ink); box-shadow:8px 8px 0 var(--ink); }
+  header { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:14px 18px; background:var(--orange); border-bottom:3px solid var(--ink); }
+  h1 { font-size:18px; } h2 { font-size:15px; } .sub,.muted { color:var(--muted); font-size:11.5px; } header .sub { color:var(--ink); margin-top:2px; }
+  .nav,.actions,.filters { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .btn { appearance:none; font:inherit; font-size:12.5px; font-weight:700; padding:7px 12px; background:var(--card); color:var(--ink); border:2.5px solid var(--ink); box-shadow:3px 3px 0 var(--ink); cursor:pointer; text-decoration:none; }
+  .btn.primary { color:white; background:var(--coral); } .btn:active:not(:disabled) { transform:translate(3px,3px); box-shadow:none; } .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .section { padding:16px 18px; border-bottom:3px solid var(--ink); } .section:last-child { border-bottom:0; }
+  .sec-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .cards { display:grid; grid-template-columns:repeat(4,minmax(120px,1fr)); gap:10px; }
+  .card { min-width:0; padding:11px 13px; background:var(--card); border:2.5px solid var(--ink); box-shadow:3px 3px 0 var(--ink); }
+  .card .num { font-size:25px; line-height:1.15; font-weight:800; overflow-wrap:anywhere; } .card .lbl { color:var(--muted); font-size:11px; margin-top:4px; }
+  .batch-box { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; padding:12px 14px; margin-bottom:14px; background:#fde3b8; border:2.5px solid var(--ink); }
+  label { display:grid; gap:4px; color:var(--muted); font-size:11px; font-weight:700; }
+  input,select { min-height:34px; padding:6px 9px; font:inherit; font-size:12px; color:var(--ink); background:var(--card); border:2px solid var(--ink); outline:none; }
+  input[type=number] { width:90px; }
+  .notice { display:none; padding:8px 10px; margin-bottom:12px; border:2px solid var(--ink); font-size:12px; line-height:1.5; } .notice.ok { display:block; background:#d8f0de; } .notice.err { display:block; background:#f8cfc5; }
+  .chart { display:grid; gap:7px; }
+  .bar-row { width:100%; display:grid; grid-template-columns:92px minmax(100px,1fr) 112px; gap:9px; align-items:center; padding:4px 6px; background:transparent; border:0; color:inherit; font:inherit; cursor:pointer; text-align:left; }
+  .bar-row:hover,.bar-row.active { background:#f7e7c7; outline:2px solid var(--ink); }
+  .bar-label { font-size:12px; font-weight:700; white-space:nowrap; } .bar-track { height:18px; background:#e7d7ba; border:1.5px solid var(--ink); }
+  .bar-fill { min-width:0; height:100%; background:var(--coral); border-right:1.5px solid var(--ink); transition:width .25s ease; } .bar-row:nth-child(3n+2) .bar-fill { background:var(--orange); } .bar-row:nth-child(3n) .bar-fill { background:var(--purple); }
+  .bar-value { font-size:11px; text-align:right; color:var(--muted); } .bar-value b { color:var(--ink); font-size:12.5px; }
+  .pill { display:inline-block; margin:1px 3px 1px 0; padding:2px 7px; border:1.5px solid var(--ink); border-radius:4px; background:#fde3b8; font-size:10.5px; white-space:nowrap; }
+  .pill.empty { background:#eee; } .score { color:var(--coral); font-weight:800; }
+  table { width:100%; border-collapse:collapse; font-size:12px; } th,td { padding:8px; text-align:left; vertical-align:top; border-bottom:1.5px solid rgba(43,35,32,.24); } th { color:var(--muted); font-size:11px; }
+  .question { min-width:220px; max-width:420px; line-height:1.55; font-weight:700; word-break:break-word; } .meta { margin-top:3px; color:var(--muted); font-size:10.5px; line-height:1.45; overflow-wrap:anywhere; }
+  .empty-row { padding:28px; text-align:center; color:var(--muted); }
+  .pager { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; } .pager .muted { text-align:center; }
+  @media(max-width:820px) { header{align-items:flex-start;flex-direction:column}.cards{grid-template-columns:repeat(2,1fr)}.batch-box{align-items:flex-start;flex-direction:column}.scroll{overflow:auto}table{min-width:780px}.bar-row{grid-template-columns:76px minmax(80px,1fr) 82px}.bar-value span{display:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="panel">
+    <header>
+      <div><h1>🏷️ 低置信问题主题分布</h1><div class="sub">本地多标签模型 · 批量旁路归类 · 不影响实时客服</div></div>
+      <nav class="nav"><a class="btn" href="/">💬 聊天</a><a class="btn" href="/kb">📚 知识库</a><a class="btn" href="/review">🧭 审核台</a><a class="btn" href="/eval">📈 评估台账</a></nav>
+    </header>
+
+    <section class="section">
+      <div class="batch-box">
+        <div><h2>手动批量归类</h2><div class="muted" style="margin-top:4px">只捞尚未归类的问题；自动攒批配置默认关闭。首次运行会加载本地模型。</div></div>
+        <div class="actions">
+          <label>本批上限<input id="batchLimit" type="number" min="1" max="500" value="100"></label>
+          <button class="btn primary" id="classifyBtn">▶ 归类未处理问题</button>
+          <button class="btn" id="refreshBtn">↻ 刷新</button>
+        </div>
+      </div>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+      <div class="cards">
+        <div class="card"><div class="num" id="questionCount">—</div><div class="lbl">已归类问题</div></div>
+        <div class="card"><div class="num" id="pendingCount">—</div><div class="lbl">尚待归类问题</div></div>
+        <div class="card"><div class="num" id="assignmentCount">—</div><div class="lbl">标签分配数（多标签累计）</div></div>
+        <div class="card"><div class="num" id="modelVersion">—</div><div class="lbl">最近结果模型版本</div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="sec-head"><div><h2>主题分布</h2><div class="muted">横条按问题覆盖率绘制；多标签问题会同时计入多个主题，因此各项相加可超过 100%。点击主题筛选明细。</div></div><span class="pill" id="chartScope">全部来源</span></div>
+      <div class="chart" id="chart"><div class="empty-row">正在加载分布…</div></div>
+    </section>
+
+    <section class="section">
+      <div class="sec-head">
+        <div><h2>归类明细</h2><div class="muted">展示命中标签置信度与可追溯批次；筛选不会重新运行模型。</div></div>
+        <div class="filters">
+          <label>主题<select id="labelFilter"><option value="">全部主题</option></select></label>
+          <label>来源<select id="sourceFilter"><option value="">全部来源</option><option value="retrieval_low_conf">检索低置信</option><option value="self_check">回答自检</option><option value="user_feedback">用户反馈</option></select></label>
+          <button class="btn" id="clearFilter">清除筛选</button>
+        </div>
+      </div>
+      <div class="scroll"><table><thead><tr><th>问题</th><th>主题 / 置信度</th><th>来源</th><th>模型 / 批次</th><th>归类时间</th></tr></thead><tbody id="itemRows"><tr><td colspan="5" class="empty-row">正在加载明细…</td></tr></tbody></table></div>
+      <div class="pager"><button class="btn" id="prevBtn">← 上一页</button><span class="muted" id="pageInfo">—</span><button class="btn" id="nextBtn">下一页 →</button></div>
+    </section>
+  </main>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(/[&<>\"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char]));
+const state = { limit:20, offset:0, total:0, labels:[] };
+
+async function api(path, options) {
+  const response = await fetch(path, options);
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    const detail = typeof body.detail === "string" ? body.detail : (body.detail?.message || `HTTP ${response.status}`);
+    throw new Error(detail);
+  }
+  return response.json();
+}
+function notice(message, kind="ok") { const box=$("notice"); box.className=`notice ${kind}`; box.textContent=message; }
+function pct(value) { return `${(Number(value || 0) * 100).toFixed(1)}%`; }
+function sourceName(source) { return ({retrieval_low_conf:"检索低置信",self_check:"回答自检",user_feedback:"用户反馈"})[source] || source || "—"; }
+function formatTime(value) { if (!value) return "—"; const date=new Date(value); return Number.isNaN(date.getTime()) ? value : date.toLocaleString("zh-CN",{hour12:false}); }
+
+function fillLabelOptions(items) {
+  if (state.labels.length) return;
+  state.labels=items.map(item=>item.label);
+  $("labelFilter").insertAdjacentHTML("beforeend",state.labels.map(label=>`<option value="${esc(label)}">${esc(label)}</option>`).join(""));
+}
+async function loadDistribution() {
+  const source=$("sourceFilter").value;
+  const query=new URLSearchParams(); if(source) query.set("source",source);
+  const data=await api(`/api/topics/distribution?${query}`);
+  fillLabelOptions(data.items);
+  $("questionCount").textContent=data.classified_questions;
+  $("pendingCount").textContent=data.pending_questions;
+  $("assignmentCount").textContent=data.label_assignments;
+  $("chartScope").textContent=source ? sourceName(source) : "全部来源";
+  const max=Math.max(1,...data.items.map(item=>item.count));
+  const selected=$("labelFilter").value;
+  $("chart").innerHTML=data.items.map(item=>`<button class="bar-row${selected===item.label?" active":""}" data-label="${esc(item.label)}" title="筛选 ${esc(item.label)}">
+    <span class="bar-label">${esc(item.label)}</span><span class="bar-track"><span class="bar-fill" style="display:block;width:${(item.count/max*100).toFixed(2)}%"></span></span><span class="bar-value"><b>${item.count}</b> <span>条 · ${pct(item.question_ratio)}</span></span>
+  </button>`).join("");
+  document.querySelectorAll("[data-label]").forEach(button=>button.onclick=()=>{ $("labelFilter").value=button.dataset.label; state.offset=0; loadAll().catch(showLoadError); });
+}
+function renderLabels(item) {
+  if (!item.labels?.length) return '<span class="pill empty">未识别</span>';
+  return item.labels.map(label=>`<span class="pill">${esc(label)} <span class="score">${pct(item.scores?.[label])}</span></span>`).join("");
+}
+async function loadItems() {
+  const query=new URLSearchParams({limit:String(state.limit),offset:String(state.offset)});
+  if($("labelFilter").value) query.set("label",$("labelFilter").value);
+  if($("sourceFilter").value) query.set("source",$("sourceFilter").value);
+  const data=await api(`/api/topics/items?${query}`); state.total=data.total;
+  $("itemRows").innerHTML=data.items.length ? data.items.map(item=>`<tr><td><div class="question">${esc(item.raw_question)}</div><div class="meta">问题 #${item.question_id}</div></td><td>${renderLabels(item)}</td><td>${esc(sourceName(item.source))}<div class="meta">${esc(item.reason || "无原因记录")}</div></td><td><b>${esc(item.model_version)}</b><div class="meta">${esc(item.batch_id)}</div></td><td>${esc(formatTime(item.classified_at))}</td></tr>`).join("") : '<tr><td colspan="5" class="empty-row">当前筛选条件下没有归类结果</td></tr>';
+  if(data.items[0]) $("modelVersion").textContent=data.items[0].model_version;
+  const start=state.total ? state.offset+1 : 0, end=Math.min(state.offset+state.limit,state.total);
+  $("pageInfo").textContent=`${start}–${end} / 共 ${state.total} 条`;
+  $("prevBtn").disabled=state.offset===0; $("nextBtn").disabled=state.offset+state.limit>=state.total;
+}
+async function loadAll() { await Promise.all([loadDistribution(),loadItems()]); }
+function showLoadError(error) { notice(`加载失败：${error.message}`,"err"); }
+
+$("classifyBtn").onclick=async function() {
+  const limit=Number($("batchLimit").value);
+  if(!Number.isInteger(limit)||limit<1||limit>500){ notice("本批上限必须是 1–500 的整数","err"); return; }
+  this.disabled=true; const original=this.textContent; this.textContent="本地模型归类中…";
+  try {
+    const result=await api("/api/topics/classify-batch",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({limit})});
+    notice(result.classified ? `完成：本批归类 ${result.classified} 条，模型 ${result.model_version}，阈值 ${result.threshold}，设备 ${result.device || "未加载"}` : "没有待归类问题；现有结果未改动，模型权重未加载。");
+    state.offset=0; await loadAll();
+  } catch(error) { notice(`归类失败：${error.message}`,"err"); }
+  finally { this.disabled=false; this.textContent=original; }
+};
+$("refreshBtn").onclick=()=>loadAll().then(()=>notice("数据已刷新")).catch(showLoadError);
+$("labelFilter").onchange=()=>{state.offset=0;loadAll().catch(showLoadError);};
+$("sourceFilter").onchange=()=>{state.offset=0;loadAll().catch(showLoadError);};
+$("clearFilter").onclick=()=>{$("labelFilter").value="";$("sourceFilter").value="";state.offset=0;loadAll().catch(showLoadError);};
+$("prevBtn").onclick=()=>{state.offset=Math.max(0,state.offset-state.limit);loadItems().catch(showLoadError);};
+$("nextBtn").onclick=()=>{if(state.offset+state.limit<state.total){state.offset+=state.limit;loadItems().catch(showLoadError);}};
+loadAll().catch(showLoadError);
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{"query": "我的订单到哪了", "intent": "物流"}
+{"query": "退货运费谁出", "intent": "退款退货"}
+{"query": "这个耳机防水吗", "intent": "商品咨询"}
+{"query": "投诉你们客服", "intent": "投诉"}
+{"query": "你好在吗", "intent": "闲聊"}
+{"query": "发票怎么开", "intent": "售后"}
+{"query": "订单 1001 什么状态", "intent": "订单"}
+{"query": "会员有什么权益", "intent": "商品咨询"}
+{"query": "七天无理由是什么规则", "intent": "退款退货"}
+{"query": "快递几天能到", "intent": "物流"}
+{"query": "换货流程", "intent": "售后"}
+{"query": "气死我了必须给我个说法", "intent": "投诉"}
+{"query": "帮我查下 1001 到哪了", "intent": "物流"}
+{"query": "CFXB-40A 多大容量", "intent": "商品咨询"}
+{"query": "你好呀", "intent": "闲聊"}
+{"query": "退款多久到账", "intent": "退款退货"}
+{"query": "订单还没发货", "intent": "订单"}
+{"query": "质量有问题怎么处理", "intent": "售后"}
+{"query": "聊聊天呗", "intent": "闲聊"}
+{"query": "这个型号还有货吗", "intent": "商品咨询"}

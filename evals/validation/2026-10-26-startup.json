@@ -1,0 +1,76 @@
+{
+  "verified_at": "2026-10-26T18:58:06.466199+08:00",
+  "platform": "Windows x64",
+  "python": "3.13.3",
+  "environment": "new venv; include-system-site-packages=false",
+  "installer": "uv; HTTPS package mirror; pip check passed",
+  "dependency_constraints": "constraints/windows-py313-validated.txt",
+  "dependency_count": 137,
+  "tests": {
+    "passed": 296,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "live_checks": [
+    {
+      "name": "all six pages and OpenAPI",
+      "passed": true
+    },
+    {
+      "name": "39 active knowledge blocks and four real retrieval strategies",
+      "passed": true
+    },
+    {
+      "name": "both MCP services and logistics call",
+      "passed": true,
+      "tools": {
+        "logistics": [
+          "query_logistics"
+        ],
+        "aftersale": [
+          "check_warranty",
+          "query_refund_progress"
+        ]
+      }
+    },
+    {
+      "name": "real model knowledge answer with SSE and citations",
+      "passed": true
+    },
+    {
+      "name": "unsupported product question handled conservatively",
+      "passed": true
+    },
+    {
+      "name": "order picker, checkpoint resume and policy workflow",
+      "passed": true
+    },
+    {
+      "name": "explicit local ticket and refund form submissions",
+      "passed": true
+    },
+    {
+      "name": "ticket-cancel",
+      "passed": true
+    },
+    {
+      "name": "ticket-confirm",
+      "passed": true
+    },
+    {
+      "name": "real-local-topic-inference",
+      "passed": true,
+      "classified": 2,
+      "threshold": 0.4,
+      "device": "cpu"
+    }
+  ],
+  "databases": "new isolated MySQL/Milvus volumes; no original business data reused",
+  "models": "actual inference with cached/downloaded artifacts; topic weights prepared separately",
+  "limitations": [
+    "No fresh model training",
+    "No rerun of frozen 100/510-case performance evaluations",
+    "No first-download, cross-platform, CUDA-training or production-load certification"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "frozen_existing_topic_evaluation",
+  "model_version": "targeted-v5",
+  "test_rows": 510,
+  "threshold": 0.4,
+  "source": "evals/ch10/report.json before publication packaging",
+  "dataset_files": {
+    "synthetic.jsonl": "15ecffab46046748ce8b1509800bd3b2e7b638bd4614d87eecbdd92d49121843",
+    "train.jsonl": "f74385ea417fc50735732be78ee892729dfb0bc1f103d36762b918e5fe14baa6",
+    "dev.jsonl": "3db8f58b72b5cecd324ae02f8a0002868c7fe8d21d3995acc3955e4070b30266",
+    "test.jsonl": "643645a7507086cd3a8351bac5012af36f963b381cf068665121cc5f1088f292",
+    "targeted_patch.jsonl": "77f5baca272c8cb3a7c318726776275c1e28378c1ef161b11115b7256eea1b30",
+    "targeted_challenge.jsonl": "6528585fa5a9e85476f6c38403a9203d4a3b7a49da4f89c82995d1dd3af70618"
+  },
+  "regression_note": "Published 12-row regression IDs/sources are anonymized; question texts and labels are unchanged.",
+  "new_training_runs": 0
+}

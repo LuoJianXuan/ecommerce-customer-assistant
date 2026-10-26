@@ -1,0 +1,38 @@
+{
+  "frozen_at": "2026-10-23T11:08:16",
+  "synthetic_rows": 5102,
+  "synthetic_sha256": "15ecffab46046748ce8b1509800bd3b2e7b638bd4614d87eecbdd92d49121843",
+  "primary_counts": {
+    "退换货": 300,
+    "物流": 300,
+    "尺码": 300,
+    "发票": 300,
+    "质量问题": 300,
+    "运费": 300,
+    "优惠活动": 300,
+    "价保": 300,
+    "支付": 300,
+    "订单修改": 300,
+    "库存补货": 300,
+    "商品信息": 300,
+    "保修维修": 300,
+    "账号": 302,
+    "会员积分": 300,
+    "评价": 300,
+    "其他": 300
+  },
+  "real_labeled_rows": 12,
+  "split_seed": 42,
+  "review_applied": {
+    "label_corrections": 8,
+    "corrections_reinstated": 0,
+    "other_stripped": 0,
+    "disagreement_reinstated": 0,
+    "primary_repaired": 0,
+    "normalized_duplicates_removed": 0
+  },
+  "invariants": {
+    "primary_in_labels": true,
+    "normalized_text_unique": true
+  }
+}
